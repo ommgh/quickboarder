@@ -18,6 +18,7 @@ import { LoginSchema } from "@/schemas";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-sucess";
 import { login } from "@/actions/login";
+import { Input } from "../ui/input";
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
@@ -64,7 +65,7 @@ export const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       disabled={isPending}
                       {...field}
                       type="email"
@@ -83,7 +84,7 @@ export const LoginForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       {...field}
                       disabled={isPending}
                       type="password"

@@ -17,6 +17,7 @@ import { RegisterSchema } from "@/schemas";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-sucess";
 import { register } from "@/actions/register";
+import { Input } from "../ui/input";
 export const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
@@ -58,7 +59,7 @@ export const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       disabled={isPending}
                       {...field}
                       type="string"
@@ -77,7 +78,7 @@ export const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       disabled={isPending}
                       {...field}
                       type="email"
@@ -96,7 +97,7 @@ export const RegisterForm = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <input
+                    <Input
                       {...field}
                       disabled={isPending}
                       type="password"
