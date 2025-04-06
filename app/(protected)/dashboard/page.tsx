@@ -1,9 +1,21 @@
-import Link from "next/link"
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowRight, BarChart, Box, Image, Package, Upload } from "lucide-react"
-
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  ArrowRight,
+  Box,
+  Image,
+  Package,
+  Sparkles,
+  Upload,
+} from "lucide-react";
 
 export default function HomePage() {
   return (
@@ -12,42 +24,58 @@ export default function HomePage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Total Products
+              </CardTitle>
               <Box className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">142</div>
-              <p className="text-xs text-muted-foreground">+22% from last month</p>
+              <p className="text-xs text-muted-foreground">
+                +22% from last month
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Organized Products</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Organized Products
+              </CardTitle>
               <Package className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">89</div>
-              <p className="text-xs text-muted-foreground">+10% from last month</p>
+              <p className="text-xs text-muted-foreground">
+                +10% from last month
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">Unorganized Products</CardTitle>
+              <CardTitle className="text-sm font-medium">
+                Unorganized Products
+              </CardTitle>
               <Image className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">53</div>
-              <p className="text-xs text-muted-foreground">+49% from last month</p>
+              <p className="text-xs text-muted-foreground">
+                +49% from last month
+              </p>
             </CardContent>
           </Card>
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-medium">AI Processing</CardTitle>
-              <BarChart className="h-4 w-4 text-muted-foreground" />
+              <CardTitle className="text-sm font-medium">
+                Unique Products
+              </CardTitle>
+              <Sparkles className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">98%</div>
-              <p className="text-xs text-muted-foreground">+4% from last month</p>
+              <div className="text-2xl font-bold">10</div>
+              <p className="text-xs text-muted-foreground">
+                +4% from last month
+              </p>
             </CardContent>
           </Card>
         </div>
@@ -55,15 +83,21 @@ export default function HomePage() {
           <Card className="col-span-4">
             <CardHeader>
               <CardTitle>Get Started</CardTitle>
-              <CardDescription>Upload a product image or barcode to get started with QuickBoarder AI.</CardDescription>
+              <CardDescription>
+                Upload a product image or barcode to get started with
+                QuickBoarder AI.
+              </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">Unorganized Products</CardTitle>
+                    <CardTitle className="text-lg">
+                      Unorganized Products
+                    </CardTitle>
                     <CardDescription>
-                      Upload an image of your product and let AI generate the details.
+                      Upload an image of your product and let AI generate the
+                      details.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -77,9 +111,12 @@ export default function HomePage() {
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-lg">Organized Products</CardTitle>
+                    <CardTitle className="text-lg">
+                      Organized Products
+                    </CardTitle>
                     <CardDescription>
-                      Upload a barcode image and we'll fetch product details automatically.
+                      Upload a barcode image and we'll fetch product details
+                      automatically.
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
@@ -92,12 +129,31 @@ export default function HomePage() {
                   </CardContent>
                 </Card>
               </div>
+              <Card>
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg">Custom Products</CardTitle>
+                  <CardDescription>
+                    Upload a image of your crafted products and get it
+                    e-Commerce ready.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button className="w-full" asChild>
+                    <Link href="/dashboard/unique">
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload Image
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
             </CardContent>
           </Card>
           <Card className="col-span-3">
             <CardHeader>
               <CardTitle>Recent Activity</CardTitle>
-              <CardDescription>Your recent product processing activity.</CardDescription>
+              <CardDescription>
+                Your recent product processing activity.
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
@@ -106,8 +162,12 @@ export default function HomePage() {
                     <Package className="h-4 w-4" />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">Wireless Headphones</p>
-                    <p className="text-sm text-muted-foreground">Processed as unorganized product</p>
+                    <p className="text-sm font-medium leading-none">
+                      Wireless Headphones
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Processed as unorganized product
+                    </p>
                   </div>
                   <div className="text-sm text-muted-foreground">2m ago</div>
                 </div>
@@ -116,8 +176,12 @@ export default function HomePage() {
                     <Package className="h-4 w-4" />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">Smart Watch</p>
-                    <p className="text-sm text-muted-foreground">Processed as organized product</p>
+                    <p className="text-sm font-medium leading-none">
+                      Smart Watch
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Processed as organized product
+                    </p>
                   </div>
                   <div className="text-sm text-muted-foreground">1h ago</div>
                 </div>
@@ -126,8 +190,12 @@ export default function HomePage() {
                     <Package className="h-4 w-4" />
                   </div>
                   <div className="flex-1 space-y-1">
-                    <p className="text-sm font-medium leading-none">Bluetooth Speaker</p>
-                    <p className="text-sm text-muted-foreground">Processed as unorganized product</p>
+                    <p className="text-sm font-medium leading-none">
+                      Bluetooth Speaker
+                    </p>
+                    <p className="text-sm text-muted-foreground">
+                      Processed as unorganized product
+                    </p>
                   </div>
                   <div className="text-sm text-muted-foreground">3h ago</div>
                 </div>
@@ -145,6 +213,5 @@ export default function HomePage() {
         </div>
       </main>
     </div>
-  )
+  );
 }
-
