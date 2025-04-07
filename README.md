@@ -17,15 +17,6 @@ QuickBoarder is an AI-powered dashboard that allows users to upload product imag
   - Save products in a structured format.
   - Export catalogue for e-commerce integration.
 
-## Tech Stack
-
-- **Frontend**: Next.js (React-based framework)
-- **Backend**: Node.js with API routes in Next.js
-- **AI Models**: Custom models for product recognition and text generation
-- **Web Scraping**: Puppeteer/Cheerio for fetching product details
-- **Database**: MongoDB/PostgreSQL (depending on preference)
-- **Storage**: Cloud storage for managing images
-- **Deployment**: Vercel/AWS/GCP for hosting
 
 ## Installation & Setup
 
@@ -55,15 +46,9 @@ QuickBoarder is an AI-powered dashboard that allows users to upload product imag
 2. Select product type:
    - **Unorganised**: AI detects product and generates images, title, and description.
    - **Organised**: AI extracts barcode and fetches details via web scraping.
+   - **Unique**: AI enchances the product image quality and presentation.
 3. Review and edit product details.
 4. Save product to the catalogue.
 5. Export catalogue for e-commerce platforms.
 
-## Contributing
-
-Feel free to submit issues or pull requests for improvements.
-
-## License
-
-MIT License
 
