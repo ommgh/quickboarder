@@ -1,7 +1,5 @@
 "use client";
 
-import type React from "react";
-
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,65 +17,62 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "@/components/ui/use-toast";
 
-export default function UnorganizedProductPage() {
+export default function ProductEditPage() {
   const [step, setStep] = useState<"upload" | "processing" | "results">(
     "upload"
   );
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [selectedResultImage, setSelectedResultImage] = useState<number | null>(
-    null
-  );
+  const [resultImage, setResultImage] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
-  // Simulated AI-generated images
-  const resultImages = [
-    "/placeholder.svg?height=300&width=300",
-    "/placeholder.svg?height=300&width=300",
-    "/placeholder.svg?height=300&width=300",
-    "/placeholder.svg?height=300&width=300",
-  ];
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setSelectedImage(event.target?.result as string);
-        // Simulate processing
-        setStep("processing");
-        setTimeout(() => {
-          setStep("results");
-          setTitle("Premium Wireless Headphones");
-          setDescription(
-            "High-quality wireless headphones with noise cancellation, 30-hour battery life, and premium sound quality. Compatible with all Bluetooth devices."
-          );
-        }, 3000);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
+    if (!file) return;
 
-  const handleSaveProduct = () => {
-    if (!selectedResultImage) {
-      toast({
-        title: "Please select an image",
-        description:
-          "You must select one of the generated images before saving.",
-        variant: "destructive",
-      });
-      return;
-    }
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const base64Full = event.target?.result as string;
+      console.log("Full base64 result:", base64Full);
 
-    toast({
-      title: "Product saved successfully",
-      description: "The product has been added to your catalog.",
-    });
+      const base64 = base64Full?.split(",")[1];
+      if (!base64) {
+        console.error("Base64 data missing!");
+        return;
+      }
+
+      setSelectedImage(URL.createObjectURL(file));
+      setStep("processing");
+
+      try {
+        const res = await fetch("/api/image/edit", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            imageBase64: base64,
+          }),
+        });
+
+        if (!res.ok) throw new Error("Image processing failed");
+
+        const data = await res.json();
+        setResultImage(`data:image/png;base64,${data.editedImageBase64}`);
+        setTitle("Title of the Product");
+        setDescription("Description of the Product");
+        setStep("results");
+      } catch (error) {
+        console.error(error);
+        alert("Something went wrong while processing the image.");
+        setStep("upload");
+      }
+    };
+    reader.readAsDataURL(file);
   };
 
   return (
@@ -95,13 +90,13 @@ export default function UnorganizedProductPage() {
           <CardHeader>
             <CardTitle>Upload Product Image</CardTitle>
             <CardDescription>
-              Upload a clear image of your product. Our AI will detect the
-              product and generate details.
+              Upload a clear image of your product. Our AI will generate
+              enhanced visuals and descriptions.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center gap-4">
-              <div className="flex h-64 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/25 p-4 transition-colors hover:border-muted-foreground/50">
+              <div className="flex h-64 w-full flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/25 p-4 transition-colors hover:border-muted-foreground/50">
                 <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
                 <p className="mb-2 text-sm font-medium">
                   Drag and drop your image here or click to browse
@@ -135,65 +130,49 @@ export default function UnorganizedProductPage() {
       {step === "processing" && (
         <Card className="mx-auto max-w-2xl">
           <CardHeader>
-            <CardTitle>Processing Your Product</CardTitle>
+            <CardTitle>Processing Your Image</CardTitle>
             <CardDescription>
-              Our AI is analyzing your product image and generating details...
+              Hold tight! Our AI is enhancing your image...
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-10">
             <Loader2 className="mb-4 h-12 w-12 animate-spin text-primary" />
             <p className="text-center text-sm text-muted-foreground">
-              This may take a few moments. We're detecting your product and
-              generating high-quality images, title, and description.
+              This might take a few seconds.
             </p>
           </CardContent>
         </Card>
       )}
 
-      {step === "results" && (
+      {step === "results" && resultImage && (
         <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
-              <CardTitle>Generated Images</CardTitle>
+              <CardTitle>Edited Image</CardTitle>
               <CardDescription>
-                Select the best image for your product.
+                Here’s your enhanced product image
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                {resultImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className={`relative cursor-pointer overflow-hidden rounded-md border-2 ${
-                      selectedResultImage === index
-                        ? "border-primary"
-                        : "border-transparent"
-                    }`}
-                    onClick={() => setSelectedResultImage(index)}
-                  >
-                    <Image
-                      src={image || "/placeholder.svg"}
-                      alt={`Generated product image ${index + 1}`}
-                      width={300}
-                      height={300}
-                      className="aspect-square object-cover"
-                    />
-                    {selectedResultImage === index && (
-                      <div className="absolute right-2 top-2 rounded-full bg-primary p-1">
-                        <Check className="h-4 w-4 text-primary-foreground" />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <Image
+                src={resultImage}
+                alt="Edited Product Image"
+                width={400}
+                height={400}
+                className="rounded-md object-cover"
+              />
             </CardContent>
+            <CardFooter className="flex items-end justify-end gap-3">
+              <Button variant="outline">Retry</Button>
+              <Button>Save</Button>
+            </CardFooter>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Product Details</CardTitle>
               <CardDescription>
-                Review and edit the AI-generated product details.
+                Review and edit product information.
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -225,7 +204,7 @@ export default function UnorganizedProductPage() {
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="description">Product Description</Label>
+                  <Label htmlFor="description">Description</Label>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -262,12 +241,6 @@ export default function UnorganizedProductPage() {
                 />
               </div>
             </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => setStep("upload")}>
-                Start Over
-              </Button>
-              <Button onClick={handleSaveProduct}>Save to Catalog</Button>
-            </CardFooter>
           </Card>
         </div>
       )}

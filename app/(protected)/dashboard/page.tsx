@@ -89,6 +89,23 @@ export default function HomePage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="grid gap-6">
+              <Card>
+                <CardHeader className="">
+                  <CardTitle className="text-lg">Custom Products</CardTitle>
+                  <CardDescription>
+                    Upload a image of your crafted products and get it
+                    e-Commerce ready.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <Button className="w-full" asChild>
+                    <Link href="/dashboard/unique">
+                      <Upload className="mr-2 h-4 w-4" />
+                      Upload Image
+                    </Link>
+                  </Button>
+                </CardContent>
+              </Card>
               <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                 <Card>
                   <CardHeader className="pb-2">
@@ -129,23 +146,6 @@ export default function HomePage() {
                   </CardContent>
                 </Card>
               </div>
-              <Card>
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-lg">Custom Products</CardTitle>
-                  <CardDescription>
-                    Upload a image of your crafted products and get it
-                    e-Commerce ready.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Button className="w-full" asChild>
-                    <Link href="/dashboard/unique">
-                      <Upload className="mr-2 h-4 w-4" />
-                      Upload Image
-                    </Link>
-                  </Button>
-                </CardContent>
-              </Card>
             </CardContent>
           </Card>
           <Card className="col-span-3">
