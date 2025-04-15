@@ -19,7 +19,7 @@ import {
 
 export default function HomePage() {
   return (
-    <div className="flex min-h-screen w-full flex-col">
+    <div className="flex h-full w-full flex-col">
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card>
@@ -91,7 +91,7 @@ export default function HomePage() {
             <CardContent className="grid gap-6">
               <Card>
                 <CardHeader className="">
-                  <CardTitle className="text-lg">Custom Products</CardTitle>
+                  <CardTitle className="text-lg">Unique Products</CardTitle>
                   <CardDescription>
                     Upload a image of your crafted products and get it
                     e-Commerce ready.

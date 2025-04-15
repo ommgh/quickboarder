@@ -4,34 +4,6 @@ import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Grid } from "@react-three/drei";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
-import { Manrope } from "next/font/google";
-
-function SpinningLogo() {
-  const groupRef = useRef<THREE.Group>(null);
-
-  useFrame((state, delta) => {
-    if (groupRef.current) {
-      groupRef.current.rotation.y += delta * 0.5;
-    }
-  });
-
-  return (
-    <group ref={groupRef}>
-      <mesh position={[0, 0, 0]}>
-        <boxGeometry args={[1, 1, 1]} />
-        <meshStandardMaterial color="#ffffff" />
-      </mesh>
-      <mesh position={[0.5, 0.5, 0.5]}>
-        <boxGeometry args={[0.5, 0.5, 0.5]} />
-        <meshStandardMaterial color="#cccccc" />
-      </mesh>
-      <mesh position={[-0.5, -0.5, -0.5]}>
-        <boxGeometry args={[0.5, 0.5, 0.5]} />
-        <meshStandardMaterial color="#999999" />
-      </mesh>
-    </group>
-  );
-}
 
 function AnimatedBox({
   initialPosition,
@@ -81,13 +53,13 @@ function AnimatedBox({
   return (
     <mesh ref={meshRef} position={initialPosition}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#ffffff" opacity={0.9} transparent />
+      <meshStandardMaterial color="#a48fff" opacity={0.9} transparent />
       <lineSegments>
         <edgesGeometry
           attach="geometry"
           args={[new THREE.BoxGeometry(1, 1, 1)]}
         />
-        <lineBasicMaterial attach="material" color="#000000" linewidth={2} />
+        <lineBasicMaterial attach="material" color="#a48fff" linewidth={2} />
       </lineSegments>
     </mesh>
   );

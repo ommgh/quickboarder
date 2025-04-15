@@ -11,7 +11,7 @@ For each image:
 1. Detect and isolate the main product.
 2. Enhance its presentation:
    - If it's artwork (painting, print, etc.): add a realistic frame, mount it on a styled wall (e.g., bedroom, living room, gallery).
-   - If it's furniture: place it in a minimalist, well-lit room context (e.g., sofa in a modern living room, chair at a wooden desk).
+   - If it's furniture: place it in a minimalist, well-lit room context.
    - If it's a small item (vase, lamp, decor): place on a clean surface with soft shadows and ambient light.
    - If it’s apparel: place on a mannequin or human model in a clean, fashion-forward setting.
 3. Use neutral, clean, modern backgrounds that fit the context and make the product the focus.

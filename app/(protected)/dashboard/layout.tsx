@@ -1,19 +1,19 @@
-import type React from "react"
-import type { Metadata } from "next"
-import Link from "next/link"
+import type React from "react";
+import type { Metadata } from "next";
+import Link from "next/link";
 
-import { Button } from "@/components/ui/button"
-import { Package } from "lucide-react"
+import { Button } from "@/components/ui/button";
+import { Package } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "QuickBoarder - Dashboard",
   description: "Process your products with AI",
-}
+};
 
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: React.ReactNode;
 }) {
   return (
     <div className="flex min-h-screen w-full flex-col">
@@ -29,13 +29,12 @@ export default function DashboardLayout({
           <Button variant="ghost" size="sm" asChild>
             <Link href="/catalog">Catalog</Link>
           </Button>
-          <Button variant="ghost" size="sm" asChild>
+          <Button variant="ghost" size="sm" asChild className="hidden lg:flex">
             <Link href="/settings">Settings</Link>
           </Button>
         </nav>
       </header>
       <main className="flex flex-1 flex-col">{children}</main>
     </div>
-  )
+  );
 }
-
