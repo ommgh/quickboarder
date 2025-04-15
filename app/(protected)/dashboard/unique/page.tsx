@@ -17,6 +17,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 
 export default function ProductEditPage() {
   const [step, setStep] = useState<"upload" | "processing" | "results">(
@@ -73,6 +74,13 @@ export default function ProductEditPage() {
       }
     };
     reader.readAsDataURL(file);
+  };
+
+  const handleSaveProduct = () => {
+    toast({
+      title: "Product saved successfully",
+      description: "The product has been added to your catalog.",
+    });
   };
 
   return (
@@ -163,8 +171,10 @@ export default function ProductEditPage() {
               />
             </CardContent>
             <CardFooter className="flex items-end justify-end gap-3">
-              <Button variant="outline">Retry</Button>
-              <Button>Save</Button>
+              <Button variant="outline" onClick={() => setStep("upload")}>
+                Start Over
+              </Button>
+              <Button onClick={handleSaveProduct}>Save to Catalog</Button>
             </CardFooter>
           </Card>
 
