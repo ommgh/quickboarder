@@ -50,7 +50,7 @@ export default function ProductEditPage() {
       setStep("processing");
 
       try {
-        const res = await fetch("/api/image/edit", {
+        const res = await fetch("/api/image/gen", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
