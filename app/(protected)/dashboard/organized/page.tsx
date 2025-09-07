@@ -1,95 +1,155 @@
-"use client"
+"use client";
+import { useState } from "react";
+import { BrowserBarcodeReader } from "@zxing/library";
 
-import type React from "react"
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import NextImage from "next/image";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Upload,
+  Loader2,
+  AlertCircle,
+  Check,
+  Edit,
+} from "lucide-react";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "@/components/ui/use-toast";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowLeft, Check, Edit, Loader2, Upload } from "lucide-react"
+type WorkflowStep =
+  | "upload"
+  | "decoding"
+  | "scraping"
+  | "review"
+  | "completed"
+  | "error";
+export default function OrganizedPage() {
+  const [step, setStep] = useState<WorkflowStep>("upload");
+  const [barcodeNumber, setBarcodeNumber] = useState<string>("");
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [productName, setProductName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [category, setCategory] = useState("");
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { toast } from "@/components/ui/use-toast"
+  const [error, setError] = useState<string | null>(null);
 
-export default function OrganizedProductPage() {
-  const [step, setStep] = useState<"upload" | "processing" | "results">("upload")
-  const [barcodeImage, setBarcodeImage] = useState<string | null>(null)
-  const [barcodeNumber, setBarcodeNumber] = useState<string>("")
-  const [selectedResultImage, setSelectedResultImage] = useState<number | null>(null)
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [price, setPrice] = useState("")
-  const [isEditingTitle, setIsEditingTitle] = useState(false)
-  const [isEditingDescription, setIsEditingDescription] = useState(false)
+  const [isEditingName, setIsEditingName] = useState(false);
+  const [isEditingDescription, setIsEditingDescription] = useState(false);
 
-  // Simulated web-scraped images
-  const resultImages = [
-    "/placeholder.svg?height=300&width=300",
-    "/placeholder.svg?height=300&width=300",
-    "/placeholder.svg?height=300&width=300",
-    "/placeholder.svg?height=300&width=300",
-  ]
+  const [productImage, setProductImage] = useState<string>("");
 
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      const reader = new FileReader()
-      reader.onload = (event) => {
-        setBarcodeImage(event.target?.result as string)
-        // Simulate processing
-        setStep("processing")
-        setTimeout(() => {
-          setBarcodeNumber("8901234567890")
-          setStep("results")
-          setTitle("Smart Fitness Tracker Watch")
-          setDescription(
-            "Track your fitness goals with this advanced smart watch. Features include heart rate monitoring, step counting, sleep tracking, and smartphone notifications. Water-resistant up to 50m.",
-          )
-        }, 3000)
-      }
-      reader.readAsDataURL(file)
-    }
-  }
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
 
-  const handleManualBarcode = (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!barcodeNumber || barcodeNumber.length < 8) {
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const img = new Image();
+      img.src = event.target?.result as string;
+      setStep("decoding");
+
+      img.onload = async () => {
+        const codeReader = new BrowserBarcodeReader();
+        try {
+          const result = await codeReader.decodeFromImage(img);
+          const detectedBarcode = result.getText();
+          setBarcodeNumber(detectedBarcode);
+
+          setStep("scraping");
+          try {
+            const response = await fetch("/api/scrape", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ barcodeNumber: detectedBarcode }),
+            });
+
+            if (!response.ok) throw new Error("API error");
+
+            const data = await response.json();
+
+            if (data.product) {
+              setProductName(data.product.name || "");
+              setDescription(data.product.description || "");
+              setCategory(data.product.category || "");
+              setProductImage(data.product.imageUrl || "");
+              setStep("completed");
+            } else {
+              setError("No product details found.");
+              setStep("error");
+            }
+          } catch (err) {
+            console.error("Error scraping data", err);
+            setError("Failed to analyze the product. Please try again.");
+            setStep("error");
+          }
+        } catch {
+          console.log("No barcode found");
+          setError("Could not detect a valid barcode.");
+          setStep("error");
+        }
+      };
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSaveProduct = async () => {
+    if (!productImage) {
       toast({
-        title: "Invalid barcode",
-        description: "Please enter a valid barcode number",
+        title: "Cannot save product",
+        description: "Product analysis or image enhancement is not complete.",
         variant: "destructive",
-      })
-      return
+      });
+      return;
     }
-
-    setStep("processing")
-    setTimeout(() => {
-      setStep("results")
-      setTitle("Smart Fitness Tracker Watch")
-      setDescription(
-        "Track your fitness goals with this advanced smart watch. Features include heart rate monitoring, step counting, sleep tracking, and smartphone notifications. Water-resistant up to 50m.",
-      )
-    }, 3000)
-  }
-
-  const handleSaveProduct = () => {
-    if (!selectedResultImage) {
+    const productData = {
+      name: productName,
+      description: description,
+      category: category,
+      price: price ? parseFloat(price) : undefined,
+    };
+    try {
+      const response = await fetch("/api/products", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: productData.name,
+          description: productData.description,
+          category: productData.category,
+          price: productData.price,
+          ImageUrl: productImage,
+        }),
+      });
       toast({
-        title: "Please select an image",
-        description: "You must select one of the scraped images before saving.",
+        title: "Product saved successfully!",
+        description: "The product has been added to your catalog.",
+      });
+    } catch {
+      toast({
+        title: "Failed to save product",
         variant: "destructive",
-      })
-      return
+      });
     }
+  };
 
-    toast({
-      title: "Product saved successfully",
-      description: "The product has been added to your catalog.",
-    })
-  }
+  const handleStartOver = () => {
+    setStep("upload");
+    setBarcodeNumber("");
+    setError("");
+  };
 
   return (
     <div className="container mx-auto p-4 md:p-8">
@@ -99,146 +159,166 @@ export default function OrganizedProductPage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
-        
       </div>
 
       {step === "upload" && (
         <Card className="mx-auto max-w-2xl">
           <CardHeader>
-            <CardTitle>Upload Barcode</CardTitle>
-            <CardDescription>
-              Upload a barcode image or enter the barcode number manually. We'll fetch product details automatically.
-            </CardDescription>
+            <CardTitle>Upload Barcode Image</CardTitle>
+            <CardDescription>Upload a image of your barcode.</CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-6">
-              <div className="flex flex-col items-center justify-center gap-4">
-                <div className="flex h-48 w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/25 p-4 transition-colors hover:border-muted-foreground/50">
-                  <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
-                  <p className="mb-2 text-sm font-medium">Drag and drop your barcode image here or click to browse</p>
-                  <p className="text-xs text-muted-foreground">Supports JPG, PNG, WEBP (Max 5MB)</p>
-                  <Input
-                    type="file"
-                    className="hidden"
-                    accept="image/*"
-                    id="barcode-image"
-                    onChange={handleFileChange}
-                  />
-                  <Button
-                    variant="secondary"
-                    size="sm"
-                    className="mt-4"
-                    onClick={() => document.getElementById("barcode-image")?.click()}
-                  >
-                    Select Image
-                  </Button>
-                </div>
-              </div>
-
-              <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                  <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-background px-2 text-muted-foreground">Or enter manually</span>
-                </div>
-              </div>
-
-              <form onSubmit={handleManualBarcode} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="barcode">Barcode Number</Label>
-                  <Input
-                    id="barcode"
-                    placeholder="Enter barcode number"
-                    value={barcodeNumber}
-                    onChange={(e) => setBarcodeNumber(e.target.value)}
-                  />
-                </div>
-                <Button type="submit" className="w-full">
-                  Process Barcode
+            <div className="flex flex-col items-center justify-center gap-4">
+              <div className="flex h-64 w-full flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/25 p-4 transition-colors hover:border-muted-foreground/50">
+                <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
+                <p className="mb-2 text-sm font-medium">
+                  Drag and drop your image here or click to browse
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Supports JPG, PNG, WEBP (Max 10MB)
+                </p>
+                <Input
+                  type="file"
+                  className="hidden"
+                  accept="image/*"
+                  id="product-image"
+                  onChange={handleFileChange}
+                />
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="mt-4"
+                  onClick={() =>
+                    document.getElementById("product-image")?.click()
+                  }
+                >
+                  Select Image
                 </Button>
-              </form>
+              </div>
             </div>
           </CardContent>
         </Card>
       )}
-
-      {step === "processing" && (
+      {step === "scraping" && (
         <Card className="mx-auto max-w-2xl">
           <CardHeader>
-            <CardTitle>Processing Your Barcode</CardTitle>
-            <CardDescription>We're fetching product details from online sources...</CardDescription>
+            <CardTitle>Getting Your Product Details</CardTitle>
+            <CardDescription>
+              Our Scraping Engine is identifying your product and generating
+              details...
+            </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col items-center justify-center py-10">
             <Loader2 className="mb-4 h-12 w-12 animate-spin text-primary" />
             <p className="text-center text-sm text-muted-foreground">
-              This may take a few moments. We're searching for your product using barcode {barcodeNumber || "detection"}{" "}
-              and gathering images, title, and description.
+              This usually takes just a few seconds.
             </p>
           </CardContent>
         </Card>
       )}
 
-      {step === "results" && (
+      {step === "error" && (
+        <Card className="mx-auto max-w-2xl">
+          <CardHeader>
+            <CardTitle>Something went wrong</CardTitle>
+            <CardDescription>
+              We encountered an issue processing your image.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {error && (
+              <Alert className="mb-4">
+                <AlertCircle className="h-4 w-4" />
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+          </CardContent>
+          <CardFooter>
+            <Button onClick={handleStartOver} className="w-full">
+              Try Again
+            </Button>
+          </CardFooter>
+        </Card>
+      )}
+
+      {step === "completed" && (
         <div className="grid gap-6 md:grid-cols-2">
+          {/* Image Section */}
           <Card>
             <CardHeader>
-              <CardTitle>Scraped Images</CardTitle>
-              <CardDescription>
-                Select the best image for your product. These images were found online using barcode {barcodeNumber}.
-              </CardDescription>
+              <CardTitle>Product Image</CardTitle>
+              <CardDescription>Your product image</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 gap-4">
-                {resultImages.map((image, index) => (
-                  <div
-                    key={index}
-                    className={`relative cursor-pointer overflow-hidden rounded-md border-2 ${selectedResultImage === index ? "border-primary" : "border-transparent"}`}
-                    onClick={() => setSelectedResultImage(index)}
-                  >
-                    <Image
-                      src={image || "/placeholder.svg"}
-                      alt={`Scraped product image ${index + 1}`}
-                      width={300}
-                      height={300}
-                      className="aspect-square object-cover"
-                    />
-                    {selectedResultImage === index && (
-                      <div className="absolute right-2 top-2 rounded-full bg-primary p-1">
-                        <Check className="h-4 w-4 text-primary-foreground" />
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              <NextImage
+                src={productImage}
+                alt="Product Image"
+                width={400}
+                height={400}
+                className="rounded-md object-cover"
+              />
             </CardContent>
+            <CardFooter className="flex items-end justify-end gap-3">
+              <Button variant="outline" onClick={handleStartOver}>
+                Start Over
+              </Button>
+              {step === "completed" && (
+                <Button onClick={handleSaveProduct}>Save</Button>
+              )}
+            </CardFooter>
           </Card>
 
           <Card>
             <CardHeader>
               <CardTitle>Product Details</CardTitle>
-              <CardDescription>Review and edit the scraped product details.</CardDescription>
+              <CardDescription>
+                Review and edit the product information.
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {/* Product Name */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="title">Product Title</Label>
-                  <Button variant="ghost" size="sm" onClick={() => setIsEditingTitle(!isEditingTitle)}>
-                    {isEditingTitle ? <Check className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
+                  <Label htmlFor="productName">Product Name</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsEditingName(!isEditingName)}
+                  >
+                    {isEditingName ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Edit className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
-                {isEditingTitle ? (
-                  <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} />
+                {isEditingName ? (
+                  <Input
+                    id="productName"
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                  />
                 ) : (
-                  <p className="rounded-md border p-2">{title}</p>
+                  <p className="rounded-md border p-2">{productName}</p>
                 )}
               </div>
 
+              {/* Description */}
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="description">Product Description</Label>
-                  <Button variant="ghost" size="sm" onClick={() => setIsEditingDescription(!isEditingDescription)}>
-                    {isEditingDescription ? <Check className="h-4 w-4" /> : <Edit className="h-4 w-4" />}
+                  <Label htmlFor="description">Description</Label>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() =>
+                      setIsEditingDescription(!isEditingDescription)
+                    }
+                  >
+                    {isEditingDescription ? (
+                      <Check className="h-4 w-4" />
+                    ) : (
+                      <Edit className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
                 {isEditingDescription ? (
@@ -253,26 +333,28 @@ export default function OrganizedProductPage() {
                 )}
               </div>
 
+              {/* Category (Read-only for now) */}
               <div className="space-y-2">
-                <Label htmlFor="price">Price (Optional)</Label>
-                <Input id="price" placeholder="$0.00" value={price} onChange={(e) => setPrice(e.target.value)} />
+                <Label htmlFor="category">Category</Label>
+                <p className="rounded-md border p-2 text-sm bg-muted">
+                  {category}
+                </p>
               </div>
 
+              {/* Price */}
               <div className="space-y-2">
-                <Label htmlFor="barcode">Barcode</Label>
-                <Input id="barcode" value={barcodeNumber} disabled className="bg-muted" />
+                <Label htmlFor="price">Price (Optional)</Label>
+                <Input
+                  id="price"
+                  placeholder="$0.00"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                />
               </div>
             </CardContent>
-            <CardFooter className="flex justify-between">
-              <Button variant="outline" onClick={() => setStep("upload")}>
-                Start Over
-              </Button>
-              <Button onClick={handleSaveProduct}>Save to Catalog</Button>
-            </CardFooter>
           </Card>
         </div>
       )}
     </div>
-  )
+  );
 }
-

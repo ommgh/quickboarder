@@ -6,5 +6,5 @@ export const authRoutes = [
   "/auth/error",
   "/auth/new-verification",
 ];
-export const apiAuthPrefix = "/api/auth";
+export const apiAuthPrefix = "/api";
 export const DEFAULT_AUTH_REDIRECT = "/dashboard";
