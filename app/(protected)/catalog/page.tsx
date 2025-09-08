@@ -1,12 +1,26 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { ArrowLeft, Download, Edit, MoreHorizontal, Plus, Search, Trash } from "lucide-react"
-
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import {
+  ArrowLeft,
+  Download,
+  Edit,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Trash,
+  Loader2,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,122 +28,194 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { toast } from "@/components/ui/use-toast"
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { toast } from "@/components/ui/use-toast";
 
-// Sample product data
-const sampleProducts = [
-  {
-    id: 1,
-    title: "Premium Wireless Headphones",
-    description:
-      "High-quality wireless headphones with noise cancellation, 30-hour battery life, and premium sound quality.",
-    price: "$129.99",
-    image: "https://res.cloudinary.com/dcwsgwsfw/image/upload/v1740687085/quickboarder/replicate-prediction-850hvt6hr1rmc0cn940r8s4yxc_attd0p.png?height=300&width=300",
-    type: "unorganized",
-  },
-  {
-    id: 2,
-    title: "Smart Fitness Tracker Watch",
-    description:
-      "Track your fitness goals with this advanced smart watch. Features include heart rate monitoring, step counting, sleep tracking.",
-    price: "$89.99",
-    image: "https://res.cloudinary.com/dcwsgwsfw/image/upload/v1740687066/quickboarder/replicate-prediction-pybshnr1bnrm80cn942tbfa6e4_vzbcjb.png?height=300&width=300",
-    type: "organized",
-    barcode: "8901234567890",
-  },
-  {
-    id: 3,
-    title: "Portable Bluetooth Speaker",
-    description: "Waterproof portable speaker with 20-hour battery life and deep bass sound.",
-    price: "$59.99",
-    image: "https://res.cloudinary.com/dcwsgwsfw/image/upload/v1740687063/quickboarder/replicate-prediction-0qnmaecnvxrma0cn942swkm0qw_snw2et.png?height=300&width=300",
-    type: "unorganized",
-  },
-  {
-    id: 4,
-    title: "Ultra HD Action Camera",
-    description: "Capture your adventures in stunning 4K resolution with this waterproof action camera.",
-    price: "$199.99",
-    image: "https://res.cloudinary.com/dcwsgwsfw/image/upload/v1740687061/quickboarder/replicate-prediction-8hw5qqq2b5rma0cn942vsks1jw_c1lhc2.png?height=300&width=300",
-    type: "organized",
-    barcode: "7654321098765",
-  },
-  {
-    id: 5,
-    title: "Ergonomic Gaming Mouse",
-    description: "Precision gaming mouse with adjustable DPI and customizable RGB lighting.",
-    price: "$49.99",
-    image: "https://res.cloudinary.com/dcwsgwsfw/image/upload/v1740687059/quickboarder/replicate-prediction-6bqv601475rmc0cn943b9ex2j0_bgptou.png?height=300&width=300",
-    type: "unorganized",
-  },
-  {
-    id: 6,
-    title: "Mechanical Keyboard",
-    description: "Tactile mechanical keyboard with customizable backlighting and programmable keys.",
-    price: "$79.99",
-    image: "https://res.cloudinary.com/dcwsgwsfw/image/upload/v1740687058/quickboarder/replicate-prediction-k7x5mhkt3nrme0cn943a4xghar_ihjtuo.png?height=300&width=300",
-    type: "organized",
-    barcode: "1122334455667",
-  },
-]
+interface Product {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  price?: number;
+  ImageUrl: string;
+  createdAt: string;
+}
+
+interface ProductsResponse {
+  success: boolean;
+  products: Product[];
+  pagination: {
+    total: number;
+    limit: number;
+    offset: number;
+    hasMore: boolean;
+  };
+  error?: string;
+}
 
 export default function CatalogPage() {
-  const [products, setProducts] = useState(sampleProducts)
-  const [searchQuery, setSearchQuery] = useState("")
-  const [filterType, setFilterType] = useState("all")
+  const [products, setProducts] = useState<Product[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [pagination, setPagination] = useState({
+    total: 0,
+    limit: 20,
+    offset: 0,
+    hasMore: false,
+  });
+
+  // Fetch products from API
+  const fetchProducts = useCallback(
+    async (offset = 0) => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const params = new URLSearchParams({
+          limit: pagination.limit.toString(),
+          offset: offset.toString(),
+        });
+
+        const response = await fetch(`/api/products?${params.toString()}`);
+
+        if (!response.ok) {
+          const errorText = await response.text();
+          console.error("API Error Response:", errorText);
+          throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const responseText = await response.text();
+        console.log("API Response:", responseText);
+
+        let data: ProductsResponse;
+        try {
+          data = JSON.parse(responseText);
+        } catch (parseError) {
+          console.error("JSON Parse Error:", parseError);
+          console.error("Response text:", responseText);
+          throw new Error("Invalid JSON response from server");
+        }
+
+        if (data.success) {
+          setProducts(data.products);
+          setPagination(data.pagination);
+        } else {
+          throw new Error(data.error || "Failed to fetch products");
+        }
+      } catch (err) {
+        const errorMessage =
+          err instanceof Error ? err.message : "Failed to fetch products";
+        console.error("Fetch Products Error:", err);
+        setError(errorMessage);
+        toast({
+          title: "Error",
+          description: errorMessage,
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [pagination.limit],
+  );
 
   const filteredProducts = products.filter((product) => {
     const matchesSearch =
-      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      product.description.toLowerCase().includes(searchQuery.toLowerCase())
+      product.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.category.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesSearch;
+  });
 
-    const matchesType = filterType === "all" || product.type === filterType
+  const handleDeleteProduct = async (id: string) => {
+    try {
+      const response = await fetch(`/api/products/${id}`, {
+        method: "DELETE",
+      });
 
-    return matchesSearch && matchesType
-  })
+      if (!response.ok) {
+        throw new Error("Failed to delete product");
+      }
+
+      setProducts(products.filter((product) => product.id !== id));
+
+      toast({
+        title: "Product deleted",
+        description: "The product has been removed from your catalog.",
+      });
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : "Failed to delete product";
+      toast({
+        title: "Error",
+        description: errorMessage,
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleExport = () => {
-    // Create a JSON file with the product data
-    const dataStr = JSON.stringify(products, null, 2)
-    const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(dataStr)
+    const exportData = {
+      products: filteredProducts,
+      exportedAt: new Date().toISOString(),
+      totalProducts: pagination.total,
+    };
 
-    // Create a link element and trigger download
-    const exportFileDefaultName = "quickboarder-catalog.json"
-    const linkElement = document.createElement("a")
-    linkElement.setAttribute("href", dataUri)
-    linkElement.setAttribute("download", exportFileDefaultName)
-    linkElement.click()
+    const dataStr = JSON.stringify(exportData, null, 2);
+    const dataUri =
+      "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
+
+    const exportFileDefaultName = `quickboarder-catalog-${new Date().toISOString().split("T")[0]}.json`;
+    const linkElement = document.createElement("a");
+    linkElement.setAttribute("href", dataUri);
+    linkElement.setAttribute("download", exportFileDefaultName);
+    linkElement.click();
 
     toast({
       title: "Catalog exported",
       description: "Your product catalog has been exported as JSON.",
-    })
-  }
+    });
+  };
 
-  const handleDeleteProduct = (id: number) => {
-    setProducts(products.filter((product) => product.id !== id))
+  const formatPrice = (price?: number) => {
+    if (!price) return "Free";
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(price);
+  };
 
-    toast({
-      title: "Product deleted",
-      description: "The product has been removed from your catalog.",
-    })
-  }
+  useEffect(() => {
+    fetchProducts();
+  }, [fetchProducts]);
 
   return (
     <div className="container mx-auto p-4 md:p-8">
       <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <div className="mb-6 flex items-center">
-        <Button variant="outline" size="sm" asChild className="mr-4">
-          <Link href="/dashboard">
-            <ArrowLeft className="h-4 w-4" />
-          </Link>
-        </Button>
-      </div>
+        <div className="flex items-center">
+          <Button variant="outline" size="sm" asChild className="mr-4">
+            <Link href="/dashboard">
+              <ArrowLeft className="h-4 w-4" />
+            </Link>
+          </Button>
+          <div>
+            <h1 className="text-2xl font-bold">Product Catalog</h1>
+            <p className="text-muted-foreground">
+              {filteredProducts.length} of {pagination.total} product
+              {pagination.total !== 1 ? "s" : ""}
+              {searchQuery && ` matching "${searchQuery}"`}
+            </p>
+          </div>
+        </div>
+
         <div className="flex flex-col gap-2 sm:flex-row">
-          <Button variant="outline" onClick={handleExport}>
+          <Button
+            variant="outline"
+            onClick={handleExport}
+            disabled={loading || filteredProducts.length === 0}
+          >
             <Download className="mr-2 h-4 w-4" />
             Export Catalog
           </Button>
@@ -144,99 +230,144 @@ export default function CatalogPage() {
 
       <Card className="mb-6">
         <CardHeader>
-          <CardTitle>Filter Products</CardTitle>
-          <CardDescription>Search and filter your product catalog.</CardDescription>
+          <CardTitle>Search Products</CardTitle>
+          <CardDescription>
+            Search through your product catalog by name, description, or
+            category.
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search products..."
-                className="pl-8"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            <Select value={filterType} onValueChange={setFilterType}>
-              <SelectTrigger>
-                <SelectValue placeholder="Filter by type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Products</SelectItem>
-                <SelectItem value="organized">Organized Products</SelectItem>
-                <SelectItem value="unorganized">Unorganized Products</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="relative">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search products by name, description, or category..."
+              className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
+          {searchQuery && (
+            <div className="mt-2 flex items-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                Showing {filteredProducts.length} result
+                {filteredProducts.length !== 1 ? "s" : ""} for "{searchQuery}"
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSearchQuery("")}
+                className="h-6 px-2 text-xs"
+              >
+                Clear
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {filteredProducts.length > 0 ? (
-          filteredProducts.map((product) => (
-            <Card key={product.id} className="overflow-hidden">
-              <div className="aspect-video w-full overflow-hidden">
-                <Image
-                  src={product.image || "/placeholder.svg"}
-                  alt={product.title}
-                  width={400}
-                  height={225}
-                  className="h-full w-full object-cover transition-all hover:scale-105"
-                />
-              </div>
-              <CardHeader className="p-4">
-                <div className="flex items-start justify-between">
-                  <CardTitle className="line-clamp-1 text-lg">{product.title}</CardTitle>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                        <MoreHorizontal className="h-4 w-4" />
-                        <span className="sr-only">Open menu</span>
-                      </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>
-                        <Edit className="mr-2 h-4 w-4" />
-                        Edit Product
-                      </DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={() => handleDeleteProduct(product.id)}>
-                        <Trash className="mr-2 h-4 w-4" />
-                        Delete Product
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+      {loading ? (
+        <div className="flex items-center justify-center py-12">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Loading products...</span>
+        </div>
+      ) : error ? (
+        <Card className="p-8 text-center">
+          <p className="text-destructive mb-4">Error: {error}</p>
+          <Button onClick={() => fetchProducts()} variant="outline">
+            Try Again
+          </Button>
+        </Card>
+      ) : (
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {filteredProducts.length > 0 ? (
+            filteredProducts.map((product) => (
+              <Card key={product.id} className="overflow-hidden">
+                <div className="aspect-video w-full overflow-hidden">
+                  <Image
+                    src={product.ImageUrl || "/placeholder.svg"}
+                    alt={product.name}
+                    width={400}
+                    height={225}
+                    className="h-full w-full object-cover transition-all hover:scale-105"
+                  />
                 </div>
-                <CardDescription className="line-clamp-2 mt-2 text-xs">{product.description}</CardDescription>
-              </CardHeader>
-              <CardContent className="p-4 pt-0">
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">{product.price}</span>
-                  <span className="rounded-full bg-muted px-2 py-1 text-xs">
-                    {product.type === "organized" ? "Organized" : "Unorganized"}
-                  </span>
-                </div>
-                {product.type === "organized" && (
-                  <div className="mt-2 text-xs text-muted-foreground">Barcode: {product.barcode}</div>
-                )}
-              </CardContent>
-            </Card>
-          ))
-        ) : (
-          <div className="col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
-            <p className="mb-2 text-sm text-muted-foreground">No products found</p>
-            <Button variant="outline" asChild className="mt-4">
-              <Link href="/dashboard">
-                <Plus className="mr-2 h-4 w-4" />
-                Add New Product
-              </Link>
-            </Button>
-          </div>
-        )}
-      </div>
+                <CardHeader className="p-4">
+                  <div className="flex items-start justify-between">
+                    <CardTitle className="line-clamp-1 text-lg">
+                      {product.name}
+                    </CardTitle>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0"
+                        >
+                          <MoreHorizontal className="h-4 w-4" />
+                          <span className="sr-only">Open menu</span>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                        <DropdownMenuItem>
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit Product
+                        </DropdownMenuItem>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                          onClick={() => handleDeleteProduct(product.id)}
+                          className="text-destructive focus:text-destructive"
+                        >
+                          <Trash className="mr-2 h-4 w-4" />
+                          Delete Product
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                  <CardDescription className="line-clamp-2 mt-2 text-xs">
+                    {product.description}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="p-4 pt-0">
+                  <div className="flex items-center justify-between">
+                    <span className="font-medium">
+                      {formatPrice(product.price)}
+                    </span>
+                    <span className="rounded-full bg-muted px-2 py-1 text-xs">
+                      {product.category.charAt(0).toUpperCase() +
+                        product.category.slice(1)}
+                    </span>
+                  </div>
+                </CardContent>
+              </Card>
+            ))
+          ) : (
+            <div className="col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+              <p className="mb-2 text-sm text-muted-foreground">
+                {searchQuery
+                  ? "No products match your search"
+                  : "No products found"}
+              </p>
+              {searchQuery ? (
+                <Button
+                  variant="outline"
+                  onClick={() => setSearchQuery("")}
+                  className="mt-4"
+                >
+                  Clear Search
+                </Button>
+              ) : (
+                <Button variant="outline" asChild className="mt-4">
+                  <Link href="/dashboard">
+                    <Plus className="mr-2 h-4 w-4" />
+                    Add New Product
+                  </Link>
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
+      )}
     </div>
-  )
+  );
 }
-

@@ -1,9 +1,12 @@
+// /api/product/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { auth } from "@/auth";
+
 const prisma = new PrismaClient();
 
+// Validation schema for creating products
 const createProductSchema = z.object({
   name: z.string().min(1, "Product name is required").max(255),
   description: z.string().min(1, "Description is required").max(2000),
@@ -12,15 +15,18 @@ const createProductSchema = z.object({
   ImageUrl: z.string().url("Valid image URL is required"),
 });
 
+// POST - Create a new product
 export async function POST(req: NextRequest) {
-  const session = await auth();
-
-  if (!session || !session.user?.id) {
-    return new Response("Unauthorized", { status: 401 });
-  }
   try {
-    const body = await req.json();
+    const session = await auth();
+    if (!session || !session.user?.id) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
 
+    const body = await req.json();
     const validatedData = createProductSchema.parse(body);
 
     const product = await prisma.product.create({
@@ -30,7 +36,7 @@ export async function POST(req: NextRequest) {
         category: validatedData.category,
         price: validatedData.price,
         ImageUrl: validatedData.ImageUrl,
-        userId: session?.user.id,
+        userId: session.user.id,
       },
     });
 
@@ -40,6 +46,9 @@ export async function POST(req: NextRequest) {
         product: {
           id: product.id,
           name: product.name,
+          description: product.description,
+          category: product.category,
+          price: product.price ? Number(product.price) : undefined,
           ImageUrl: product.ImageUrl,
           createdAt: product.createdAt,
         },
@@ -70,14 +79,23 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// GET - List all products with pagination
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const offset = parseInt(searchParams.get("offset") || "0");
-    const category = searchParams.get("category");
+    const session = await auth();
+    if (!session || !session.user?.id) {
+      return NextResponse.json(
+        { success: false, error: "Unauthorized" },
+        { status: 401 },
+      );
+    }
 
-    const where = category ? { category } : {};
+    const { searchParams } = new URL(req.url);
+    const limit = Math.min(parseInt(searchParams.get("limit") || "20"), 100);
+    const offset = Math.max(parseInt(searchParams.get("offset") || "0"), 0);
+
+    // Only fetch products that belong to the authenticated user
+    const where = { userId: session.user.id };
 
     const [products, total] = await Promise.all([
       prisma.product.findMany({
@@ -98,22 +116,34 @@ export async function GET(req: NextRequest) {
       prisma.product.count({ where }),
     ]);
 
-    return NextResponse.json({
-      success: true,
-      products,
-      pagination: {
-        total,
-        limit,
-        offset,
-        hasMore: offset + limit < total,
+    // Convert Decimal to number for JSON serialization
+    const serializedProducts = products.map((product) => ({
+      ...product,
+      price: product.price ? Number(product.price) : undefined,
+    }));
+
+    return NextResponse.json(
+      {
+        success: true,
+        products: serializedProducts,
+        pagination: {
+          total,
+          limit,
+          offset,
+          hasMore: offset + limit < total,
+        },
       },
-    });
+      { status: 200 },
+    );
   } catch (error) {
     console.error("Products fetch error:", error);
+
     return NextResponse.json(
       {
         success: false,
         error: "Failed to fetch products",
+        details:
+          process.env.NODE_ENV === "development" ? String(error) : undefined,
       },
       { status: 500 },
     );
