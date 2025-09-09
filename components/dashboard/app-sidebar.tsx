@@ -2,26 +2,19 @@
 
 import * as React from "react";
 import {
-  IconCamera,
-  IconChartBar,
-  IconDashboard,
-  IconDatabase,
-  IconFileAi,
-  IconFileDescription,
-  IconFileWord,
-  IconFolder,
-  IconHelp,
-  IconInnerShadowTop,
-  IconListDetails,
-  IconReport,
-  IconSearch,
-  IconSettings,
-  IconUsers,
-} from "@tabler/icons-react";
+  BookOpen,
+  Bot,
+  Command,
+  Frame,
+  LifeBuoy,
+  Map,
+  PieChart,
+  Send,
+  Settings2,
+  SquareTerminal,
+} from "lucide-react";
 
-import { NavDocuments } from "@/components/dashboard/nav-documents";
 import { NavMain } from "@/components/dashboard/nav-main";
-import { NavSecondary } from "@/components/dashboard/nav-secondary";
 import { NavUser } from "@/components/dashboard/nav-user";
 import {
   Sidebar,
@@ -41,128 +34,108 @@ const data = {
   },
   navMain: [
     {
-      title: "Dashboard",
+      title: "Playground",
       url: "#",
-      icon: IconDashboard,
-    },
-    {
-      title: "Lifecycle",
-      url: "#",
-      icon: IconListDetails,
-    },
-    {
-      title: "Analytics",
-      url: "#",
-      icon: IconChartBar,
-    },
-    {
-      title: "Projects",
-      url: "#",
-      icon: IconFolder,
-    },
-    {
-      title: "Team",
-      url: "#",
-      icon: IconUsers,
-    },
-  ],
-  navClouds: [
-    {
-      title: "Capture",
-      icon: IconCamera,
+      icon: SquareTerminal,
       isActive: true,
-      url: "#",
       items: [
         {
-          title: "Active Proposals",
+          title: "History",
           url: "#",
         },
         {
-          title: "Archived",
+          title: "Starred",
+          url: "#",
+        },
+        {
+          title: "Settings",
           url: "#",
         },
       ],
     },
     {
-      title: "Proposal",
-      icon: IconFileDescription,
+      title: "Models",
       url: "#",
+      icon: Bot,
       items: [
         {
-          title: "Active Proposals",
+          title: "Genesis",
           url: "#",
         },
         {
-          title: "Archived",
+          title: "Explorer",
+          url: "#",
+        },
+        {
+          title: "Quantum",
           url: "#",
         },
       ],
     },
     {
-      title: "Prompts",
-      icon: IconFileAi,
+      title: "Documentation",
       url: "#",
+      icon: BookOpen,
       items: [
         {
-          title: "Active Proposals",
+          title: "Introduction",
           url: "#",
         },
         {
-          title: "Archived",
+          title: "Get Started",
+          url: "#",
+        },
+        {
+          title: "Tutorials",
+          url: "#",
+        },
+        {
+          title: "Changelog",
           url: "#",
         },
       ],
     },
-  ],
-  navSecondary: [
     {
       title: "Settings",
       url: "#",
-      icon: IconSettings,
-    },
-    {
-      title: "Get Help",
-      url: "#",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "#",
-      icon: IconSearch,
-    },
-  ],
-  documents: [
-    {
-      name: "Data Library",
-      url: "#",
-      icon: IconDatabase,
-    },
-    {
-      name: "Reports",
-      url: "#",
-      icon: IconReport,
-    },
-    {
-      name: "Word Assistant",
-      url: "#",
-      icon: IconFileWord,
+      icon: Settings2,
+      items: [
+        {
+          title: "General",
+          url: "#",
+        },
+        {
+          title: "Team",
+          url: "#",
+        },
+        {
+          title: "Billing",
+          url: "#",
+        },
+        {
+          title: "Limits",
+          url: "#",
+        },
+      ],
     },
   ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="offcanvas" {...props}>
+    <Sidebar variant="inset" {...props}>
       <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton
-              asChild
-              className="data-[slot=sidebar-menu-button]:!p-1.5"
-            >
+            <SidebarMenuButton size="lg" asChild>
               <a href="#">
-                <IconInnerShadowTop className="!size-5" />
-                <span className="text-base font-semibold">Acme Inc.</span>
+                <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
+                  <Command className="size-4" />
+                </div>
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Acme Inc</span>
+                  <span className="truncate text-xs">Enterprise</span>
+                </div>
               </a>
             </SidebarMenuButton>
           </SidebarMenuItem>
@@ -170,11 +143,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavDocuments items={data.documents} />
-        <NavSecondary items={data.navSecondary} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser />
       </SidebarFooter>
     </Sidebar>
   );
