@@ -27,6 +27,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { useSaveProduct } from "@/hooks/use-save-product";
+import { UploadSection } from "@/components/product/UploadSection";
+import type { UploadResult } from "@/types";
 
 interface DetectionResult {
   productName: string;
@@ -63,58 +65,47 @@ export default function ProductEditPage() {
 
   const [error, setError] = useState<string | null>(null);
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
+  const handleUpload = async ({ file, base64 }: UploadResult) => {
     setError(null);
-    const reader = new FileReader();
 
-    reader.onload = async (event) => {
-      const base64Full = event.target?.result as string;
-      const base64 = base64Full?.split(",")[1];
+    // keep a local preview using the File
+    setSelectedImage(URL.createObjectURL(file));
+    // save raw base64 (strip prefix if needed)
+    const pureBase64 = base64.split(",")[1];
+    setRawImageBase64(pureBase64);
+    setStep("detecting");
 
-      if (!base64) {
-        setError("Failed to process image");
-        return;
+    try {
+      const detectResponse = await fetch("/api/image/detect", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          imageBase64: pureBase64,
+        }),
+      });
+
+      if (!detectResponse.ok) {
+        throw new Error("Product detection failed");
       }
 
-      setSelectedImage(URL.createObjectURL(file));
-      setRawImageBase64(base64);
-      setStep("detecting");
+      const detection: DetectionResult = await detectResponse.json();
 
-      try {
-        const detectResponse = await fetch("/api/image/detect", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            imageBase64: base64,
-          }),
-        });
+      setDetectionResult(detection);
+      setProductName(detection.productName);
+      setDescription(detection.description);
+      setCategory(detection.category);
+      setStep("editing");
 
-        if (!detectResponse.ok) {
-          throw new Error("Product detection failed");
-        }
-
-        const detection: DetectionResult = await detectResponse.json();
-
-        setDetectionResult(detection);
-        setProductName(detection.productName);
-        setDescription(detection.description);
-        setCategory(detection.category);
-        setStep("editing");
-        setStep("enhancing");
-        enhanceImageInBackground(base64, detection.enhancementPrompt);
-      } catch (error) {
-        console.error("Detection error:", error);
-        setError("Failed to analyze the product. Please try again.");
-        setStep("error");
-      }
-    };
-
-    reader.readAsDataURL(file);
+      // Start enhancing in background
+      setStep("enhancing");
+      enhanceImageInBackground(pureBase64, detection.enhancementPrompt);
+    } catch (error) {
+      console.error("Detection error:", error);
+      setError("Failed to analyze the product. Please try again.");
+      setStep("error");
+    }
   };
 
   const enhanceImageInBackground = async (
@@ -209,47 +200,7 @@ export default function ProductEditPage() {
         </Button>
       </div>
 
-      {step === "upload" && (
-        <Card className="mx-auto max-w-2xl">
-          <CardHeader>
-            <CardTitle>Upload Product Image</CardTitle>
-            <CardDescription>
-              Upload a clear image of your product. Our AI will analyze it and
-              create an enhanced e-commerce listing.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="flex h-64 w-full flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/25 p-4 transition-colors hover:border-muted-foreground/50">
-                <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
-                <p className="mb-2 text-sm font-medium">
-                  Drag and drop your image here or click to browse
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Supports JPG, PNG, WEBP (Max 10MB)
-                </p>
-                <Input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  id="product-image"
-                  onChange={handleFileChange}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="mt-4"
-                  onClick={() =>
-                    document.getElementById("product-image")?.click()
-                  }
-                >
-                  Select Image
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {step === "upload" && <UploadSection onUpload={handleUpload} />}
 
       {step === "detecting" && (
         <Card className="mx-auto max-w-2xl">
@@ -455,29 +406,10 @@ export default function ProductEditPage() {
         </div>
       )}
 
-      {/* Error Alert (if enhancement fails but detection succeeded) */}
       {error && step !== "error" && (
         <Alert className="mx-auto max-w-2xl mt-4">
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>{error}</AlertDescription>
-        </Alert>
-      )}
-
-      {/* Save Error Alert */}
-      {saveState.error && (
-        <Alert className="mx-auto max-w-2xl mt-4" variant="destructive">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>{saveState.error}</AlertDescription>
-        </Alert>
-      )}
-
-      {/* Success Alert */}
-      {saveState.success && (
-        <Alert className="mx-auto max-w-2xl mt-4">
-          <AlertCircle className="h-4 w-4" />
-          <AlertDescription>
-            Product saved successfully to your catalog!
-          </AlertDescription>
         </Alert>
       )}
     </div>

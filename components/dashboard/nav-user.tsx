@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, Bell, ChevronsUp, CreditCard, LogOut } from "lucide-react";
+import { BadgeCheck, Bell, ChevronUp, CreditCard, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -35,11 +35,11 @@ export function NavUser() {
           <DropdownMenuTrigger asChild>
             <SidebarMenuButton
               size="lg"
-              className="data-[state=open]:text-sidebar-accent-foreground border"
+              className="data-[state=open]:text-sidebar-accent-foreground border rounded-none"
             >
-              <Avatar className="h-8 w-8 rounded-md">
+              <Avatar className="h-8 w-8 rounded-none">
                 <AvatarImage src={avatar} alt={name} />
-                <AvatarFallback className="rounded-md">
+                <AvatarFallback>
                   {name ? name.charAt(0).toUpperCase() : "U"}
                 </AvatarFallback>
               </Avatar>
@@ -47,11 +47,11 @@ export function NavUser() {
                 <span className="truncate font-semibold">{name}</span>
                 <span className="truncate text-xs">{email}</span>
               </div>
-              <ChevronsUp className="ml-auto size-4" />
+              <ChevronUp className="ml-auto size-4" />
             </SidebarMenuButton>
           </DropdownMenuTrigger>
           <DropdownMenuContent
-            className="w-[--radix-dropdown-menu-trigger-width] min-w-56 bg-sidebar"
+            className="w-60 min-w-56 bg-sidebar"
             side="bottom"
             align="end"
           >

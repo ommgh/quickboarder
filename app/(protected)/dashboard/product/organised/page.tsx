@@ -1,11 +1,7 @@
 "use client";
 import { useState } from "react";
-import { BrowserBarcodeReader } from "@zxing/library";
-
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 import NextImage from "next/image";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -14,94 +10,59 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Link from "next/link";
-import {
-  ArrowLeft,
-  Upload,
-  Loader2,
-  AlertCircle,
-  Check,
-  Edit,
-} from "lucide-react";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/components/ui/use-toast";
+import { ArrowLeft, Loader2, AlertCircle, Check, Edit } from "lucide-react";
+import { UploadSection } from "@/components/product/UploadSection";
 
-type WorkflowStep =
-  | "upload"
-  | "decoding"
-  | "scraping"
-  | "review"
-  | "completed"
-  | "error";
-export default function OrganizedPage() {
+type WorkflowStep = "upload" | "scraping" | "completed" | "error";
+
+export default function ProductPage() {
   const [step, setStep] = useState<WorkflowStep>("upload");
   const [barcodeNumber, setBarcodeNumber] = useState<string>("");
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [productName, setProductName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("");
-
+  const [productImage, setProductImage] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
 
   const [isEditingName, setIsEditingName] = useState(false);
   const [isEditingDescription, setIsEditingDescription] = useState(false);
 
-  const [productImage, setProductImage] = useState<string>("");
+  const handleBarcodeDetected = async (barcode: string) => {
+    setBarcodeNumber(barcode);
+    setStep("scraping");
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    try {
+      const response = await fetch("/api/scrape", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ barcodeNumber: barcode }),
+      });
 
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const img = new Image();
-      img.src = event.target?.result as string;
-      setStep("decoding");
+      if (!response.ok) throw new Error("API error");
+      const data = await response.json();
 
-      img.onload = async () => {
-        const codeReader = new BrowserBarcodeReader();
-        try {
-          const result = await codeReader.decodeFromImage(img);
-          const detectedBarcode = result.getText();
-          setBarcodeNumber(detectedBarcode);
-
-          setStep("scraping");
-          try {
-            const response = await fetch("/api/scrape", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ barcodeNumber: detectedBarcode }),
-            });
-
-            if (!response.ok) throw new Error("API error");
-
-            const data = await response.json();
-
-            if (data.product) {
-              setProductName(data.product.name || "");
-              setDescription(data.product.description || "");
-              setCategory(data.product.category || "");
-              setProductImage(data.product.imageUrl || "");
-              setStep("completed");
-            } else {
-              setError("No product details found.");
-              setStep("error");
-            }
-          } catch (err) {
-            console.error("Error scraping data", err);
-            setError("Failed to analyze the product. Please try again.");
-            setStep("error");
-          }
-        } catch {
-          console.log("No barcode found");
-          setError("Could not detect a valid barcode.");
-          setStep("error");
-        }
-      };
-    };
-    reader.readAsDataURL(file);
+      if (data.product) {
+        setProductName(data.product.name || "");
+        setDescription(data.product.description || "");
+        setCategory(data.product.category || "");
+        setProductImage(data.product.imageUrl || "");
+        setStep("completed");
+      } else {
+        setError("No product details found.");
+        setStep("error");
+      }
+    } catch (err) {
+      console.error("Error scraping data", err);
+      setError("Failed to analyze the product. Please try again.");
+      setStep("error");
+    }
   };
 
   const handleSaveProduct = async () => {
@@ -113,23 +74,16 @@ export default function OrganizedPage() {
       });
       return;
     }
-    const productData = {
-      name: productName,
-      description: description,
-      category: category,
-      price: price ? parseFloat(price) : undefined,
-    };
+
     try {
-      const response = await fetch("/api/products", {
+      await fetch("/api/products", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: productData.name,
-          description: productData.description,
-          category: productData.category,
-          price: productData.price,
+          name: productName,
+          description,
+          category,
+          price: price ? parseFloat(price) : undefined,
           ImageUrl: productImage,
         }),
       });
@@ -148,11 +102,12 @@ export default function OrganizedPage() {
   const handleStartOver = () => {
     setStep("upload");
     setBarcodeNumber("");
-    setError("");
+    setError(null);
   };
 
   return (
     <div className="container mx-auto p-4 md:p-8">
+      {/* Back Button */}
       <div className="mb-6 flex items-center">
         <Button variant="outline" size="sm" asChild className="mr-4">
           <Link href="/dashboard">
@@ -161,44 +116,33 @@ export default function OrganizedPage() {
         </Button>
       </div>
 
+      {/* Upload Step */}
       {step === "upload" && (
-        <Card className="mx-auto max-w-2xl">
-          <CardHeader>
-            <CardTitle>Upload Barcode Image</CardTitle>
-            <CardDescription>Upload a image of your barcode.</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="flex h-64 w-full flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground/25 p-4 transition-colors hover:border-muted-foreground/50">
-                <Upload className="mb-2 h-8 w-8 text-muted-foreground" />
-                <p className="mb-2 text-sm font-medium">
-                  Drag and drop your image here or click to browse
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  Supports JPG, PNG, WEBP (Max 10MB)
-                </p>
-                <Input
-                  type="file"
-                  className="hidden"
-                  accept="image/*"
-                  id="product-image"
-                  onChange={handleFileChange}
-                />
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  className="mt-4"
-                  onClick={() =>
-                    document.getElementById("product-image")?.click()
-                  }
-                >
-                  Select Image
-                </Button>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+        <UploadSection
+          onUpload={({ file }) => {
+            const img = new Image();
+            img.src = URL.createObjectURL(file);
+            img.onload = async () => {
+              const { BrowserBarcodeReader } = await import("@zxing/library");
+              const codeReader = new BrowserBarcodeReader();
+              try {
+                const result = await codeReader.decodeFromImage(img);
+                const detectedBarcode = result.getText();
+                console.log("Barcode:", detectedBarcode);
+
+                // ✅ Call your handler
+                handleBarcodeDetected(detectedBarcode);
+              } catch {
+                console.error("No barcode found");
+                setError("No valid barcode found. Please try again.");
+                setStep("error");
+              }
+            };
+          }}
+        />
       )}
+
+      {/* Scraping Step */}
       {step === "scraping" && (
         <Card className="mx-auto max-w-2xl">
           <CardHeader>
@@ -217,6 +161,7 @@ export default function OrganizedPage() {
         </Card>
       )}
 
+      {/* Error Step */}
       {step === "error" && (
         <Card className="mx-auto max-w-2xl">
           <CardHeader>
@@ -241,6 +186,7 @@ export default function OrganizedPage() {
         </Card>
       )}
 
+      {/* Completed Step */}
       {step === "completed" && (
         <div className="grid gap-6 md:grid-cols-2">
           {/* Image Section */}
@@ -262,12 +208,11 @@ export default function OrganizedPage() {
               <Button variant="outline" onClick={handleStartOver}>
                 Start Over
               </Button>
-              {step === "completed" && (
-                <Button onClick={handleSaveProduct}>Save</Button>
-              )}
+              <Button onClick={handleSaveProduct}>Save</Button>
             </CardFooter>
           </Card>
 
+          {/* Product Details Section */}
           <Card>
             <CardHeader>
               <CardTitle>Product Details</CardTitle>
@@ -333,7 +278,7 @@ export default function OrganizedPage() {
                 )}
               </div>
 
-              {/* Category (Read-only for now) */}
+              {/* Category (read-only) */}
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
                 <p className="rounded-md border p-2 text-sm bg-muted">

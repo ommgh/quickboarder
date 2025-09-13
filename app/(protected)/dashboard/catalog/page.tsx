@@ -12,6 +12,7 @@ import {
   Search,
   Trash,
   Loader2,
+  SearchIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -193,21 +194,15 @@ export default function CatalogPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-center">
-          <Button variant="outline" size="sm" asChild className="mr-4">
-            <Link href="/dashboard">
-              <ArrowLeft className="h-4 w-4" />
-            </Link>
-          </Button>
-          <div>
-            <h1 className="text-2xl font-bold">Product Catalog</h1>
-            <p className="text-muted-foreground">
-              {filteredProducts.length} of {pagination.total} product
-              {pagination.total !== 1 ? "s" : ""}
-              {searchQuery && ` matching "${searchQuery}"`}
-            </p>
-          </div>
+      <div className="flex items-center gap-4 mb-8">
+        <div className="relative flex-1">
+          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search products by name, description, or category..."
+            className="pl-8 w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
         </div>
 
         <div className="flex flex-col gap-2 sm:flex-row">
@@ -228,43 +223,6 @@ export default function CatalogPage() {
         </div>
       </div>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>Search Products</CardTitle>
-          <CardDescription>
-            Search through your product catalog by name, description, or
-            category.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="relative">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search products by name, description, or category..."
-              className="pl-8"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          {searchQuery && (
-            <div className="mt-2 flex items-center gap-2">
-              <span className="text-sm text-muted-foreground">
-                Showing {filteredProducts.length} result
-                {filteredProducts.length !== 1 ? "s" : ""} for "{searchQuery}"
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setSearchQuery("")}
-                className="h-6 px-2 text-xs"
-              >
-                Clear
-              </Button>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
       {loading ? (
         <div className="flex items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin" />
@@ -278,92 +236,54 @@ export default function CatalogPage() {
           </Button>
         </Card>
       ) : (
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <Card key={product.id} className="overflow-hidden">
-                <div className="aspect-video w-full overflow-hidden">
+              <Card key={product.id} className="overflow-hidden py-0">
+                <div className="h-full w-full overflow-hidden">
                   <Image
                     src={product.ImageUrl || "/placeholder.svg"}
                     alt={product.name}
                     width={400}
                     height={225}
-                    className="h-full w-full object-cover transition-all hover:scale-105"
+                    className="h-full w-full"
                   />
                 </div>
-                <CardHeader className="p-4">
+                <CardHeader>
                   <div className="flex items-start justify-between">
-                    <CardTitle className="line-clamp-1 text-lg">
-                      {product.name}
-                    </CardTitle>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-8 w-8 p-0"
-                        >
-                          <MoreHorizontal className="h-4 w-4" />
-                          <span className="sr-only">Open menu</span>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                        <DropdownMenuItem>
-                          <Edit className="mr-2 h-4 w-4" />
-                          Edit Product
-                        </DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem
-                          onClick={() => handleDeleteProduct(product.id)}
-                          className="text-destructive focus:text-destructive"
-                        >
-                          <Trash className="mr-2 h-4 w-4" />
-                          Delete Product
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <CardTitle className="text-lg">{product.name}</CardTitle>
                   </div>
-                  <CardDescription className="line-clamp-2 mt-2 text-xs">
-                    {product.description}
+                  <CardDescription className="flex flex-col gap-2 mt-2 text-xs ">
+                    <span className="line-clamp-2">{product.description}</span>
+                    <span className="w-fit bg-muted px-2 py-1 text-xs">
+                      {product.category.charAt(0).toUpperCase() +
+                        product.category.slice(1)}
+                    </span>
                   </CardDescription>
                 </CardHeader>
-                <CardContent className="p-4 pt-0">
+                <CardContent className="py-4">
                   <div className="flex items-center justify-between">
                     <span className="font-medium">
                       {formatPrice(product.price)}
                     </span>
-                    <span className="rounded-full bg-muted px-2 py-1 text-xs">
-                      {product.category.charAt(0).toUpperCase() +
-                        product.category.slice(1)}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <Edit className="h-4 w-4" />
+                      <Trash
+                        className="h-4 w-4 text-destructive"
+                        onClick={() => handleDeleteProduct(product.id)}
+                      />
+                    </div>
                   </div>
                 </CardContent>
               </Card>
             ))
           ) : (
-            <div className="col-span-full flex flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+            <div className="col-span-full flex flex-col items-center justify-center border border-dashed p-8 text-center">
               <p className="mb-2 text-sm text-muted-foreground">
                 {searchQuery
                   ? "No products match your search"
                   : "No products found"}
-              </p>
-              {searchQuery ? (
-                <Button
-                  variant="outline"
-                  onClick={() => setSearchQuery("")}
-                  className="mt-4"
-                >
-                  Clear Search
-                </Button>
-              ) : (
-                <Button variant="outline" asChild className="mt-4">
-                  <Link href="/dashboard">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Add New Product
-                  </Link>
-                </Button>
-              )}
+              </p>{" "}
             </div>
           )}
         </div>
