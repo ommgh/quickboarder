@@ -12,7 +12,7 @@ function AnimatedBox({
 }) {
   const meshRef = useRef<THREE.Mesh>(null);
   const [targetPosition, setTargetPosition] = useState(
-    new THREE.Vector3(...initialPosition)
+    new THREE.Vector3(...initialPosition),
   );
   const currentPosition = useRef(new THREE.Vector3(...initialPosition));
 
@@ -28,7 +28,7 @@ function AnimatedBox({
     return new THREE.Vector3(
       current.x + randomDirection[0] * 3,
       0.5,
-      current.z + randomDirection[1] * 3
+      current.z + randomDirection[1] * 3,
     );
   };
 
