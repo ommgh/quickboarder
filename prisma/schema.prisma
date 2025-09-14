@@ -23,6 +23,7 @@ model User {
   role          UserRole  @default(USER)
   accounts      Account[]
   products      Product[]
+  models        Models[]
 }
 
 model Account {
@@ -66,4 +67,14 @@ model Product {
   ImageUrl    String
   userId      String
   user        User     @relation(fields: [userId], references: [id])
+}
+
+model Models {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  name      String
+  ImageUrl  String
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }

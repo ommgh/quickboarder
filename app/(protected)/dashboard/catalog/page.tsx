@@ -194,7 +194,7 @@ export default function CatalogPage() {
 
   return (
     <div className="container mx-auto p-4 md:p-8">
-      <div className="flex items-center gap-4 mb-8">
+      <div className="flex flex-col md:flex-row items-center gap-4 mb-8">
         <div className="relative flex-1">
           <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
@@ -204,8 +204,7 @@ export default function CatalogPage() {
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
-
-        <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="flex gap-2">
           <Button
             variant="outline"
             onClick={handleExport}
@@ -240,19 +239,16 @@ export default function CatalogPage() {
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
               <Card key={product.id} className="overflow-hidden py-0">
-                <div className="h-full w-full overflow-hidden">
+                <div className="overflow-hidden">
                   <Image
                     src={product.ImageUrl || "/placeholder.svg"}
                     alt={product.name}
                     width={400}
                     height={225}
-                    className="h-full w-full"
                   />
                 </div>
                 <CardHeader>
-                  <div className="flex items-start justify-between">
-                    <CardTitle className="text-lg">{product.name}</CardTitle>
-                  </div>
+                  <CardTitle className="text-lg">{product.name}</CardTitle>
                   <CardDescription className="flex flex-col gap-2 mt-2 text-xs ">
                     <span className="line-clamp-2">{product.description}</span>
                     <span className="w-fit bg-muted px-2 py-1 text-xs">
