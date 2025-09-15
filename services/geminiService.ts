@@ -59,7 +59,6 @@ export const generateVirtualTryOnImage = async (
   try {
     // Convert garment file to data URL
     const garmentImageDataUrl = await fileToPart(garmentImage);
-
     // Call the API
     return await callModelAPI("generateTryOn", {
       modelImage: modelImageUrl,

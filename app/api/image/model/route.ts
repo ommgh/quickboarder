@@ -1,9 +1,14 @@
+// file: /api/image/model/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI, GenerateContentResponse, Modality } from "@google/genai";
+import { Buffer } from "buffer"; // needed for base64 conversion in Node runtime
 
 const GEMINI_API_KEY = process.env.GEMINI_MODEL_API_KEY!;
+const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
+const model = "gemini-2.5-flash-image-preview";
 
-const dataUrlToParts = (dataUrl: string) => {
+/** Parse a data: URL (synchronous) */
+const parseDataUrl = (dataUrl: string): { mimeType: string; data: string } => {
   const arr = dataUrl.split(",");
   if (arr.length < 2) throw new Error("Invalid data URL");
   const mimeMatch = arr[0].match(/:(.*?);/);
@@ -12,9 +17,41 @@ const dataUrlToParts = (dataUrl: string) => {
   return { mimeType: mimeMatch[1], data: arr[1] };
 };
 
-const dataUrlToPart = (dataUrl: string) => {
-  const { mimeType, data } = dataUrlToParts(dataUrl);
-  return { inlineData: { mimeType, data } };
+/** Fetch an HTTP(S) image and return mime + base64 data */
+const fetchImageUrlToBase64 = async (
+  url: string,
+): Promise<{ mimeType: string; data: string }> => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(
+      `Failed to fetch image from URL: ${res.status} ${res.statusText}`,
+    );
+  }
+  const contentType =
+    (res.headers.get("content-type") || "").split(";")[0] || "image/jpeg";
+  if (!contentType.startsWith("image/")) {
+    throw new Error(
+      `URL did not return an image. Content-Type: ${contentType}`,
+    );
+  }
+  const arrayBuffer = await res.arrayBuffer();
+  const base64 = Buffer.from(arrayBuffer).toString("base64");
+  return { mimeType: contentType, data: base64 };
+};
+
+/** Accepts either a data: URL or http(s) URL and returns an inlineData Part for Gemini */
+const toInlineImagePart = async (input: string) => {
+  if (input.startsWith("data:")) {
+    const { mimeType, data } = parseDataUrl(input);
+    return { inlineData: { mimeType, data } };
+  }
+  if (/^https?:\/\//i.test(input)) {
+    const { mimeType, data } = await fetchImageUrlToBase64(input);
+    return { inlineData: { mimeType, data } };
+  }
+  throw new Error(
+    "Unsupported image input. Provide a data: URL or an https:// URL. (Convert blob: URLs client-side first.)",
+  );
 };
 
 const handleApiResponse = (response: GenerateContentResponse): string => {
@@ -24,7 +61,6 @@ const handleApiResponse = (response: GenerateContentResponse): string => {
     throw new Error(errorMessage);
   }
 
-  // Find the first image part in any candidate
   for (const candidate of response.candidates ?? []) {
     const imagePart = candidate.content?.parts?.find((part) => part.inlineData);
     if (imagePart?.inlineData) {
@@ -48,23 +84,21 @@ const handleApiResponse = (response: GenerateContentResponse): string => {
   throw new Error(errorMessage);
 };
 
-const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-const model = "gemini-2.5-flash-image-preview";
+// --------- Image generation functions ---------
 
 // Generate Model Image
 const generateModelImage = async (
   userImageDataUrl: string,
 ): Promise<string> => {
-  const userImagePart = dataUrlToPart(userImageDataUrl);
+  const userImagePart = await toInlineImagePart(userImageDataUrl);
+
   const prompt =
     "You are an expert fashion photographer AI. Transform the person in this image into a full-body fashion model photo suitable for an e-commerce website. The background must be a clean, neutral studio backdrop (light gray, #f0f0f0). The person should have a neutral, professional model expression. Preserve the person's identity, unique features, and body type, but place them in a standard, relaxed standing model pose. The final image must be photorealistic. Return ONLY the final image.";
 
   const response = await ai.models.generateContent({
     model,
-    contents: { parts: [userImagePart, { text: prompt }] },
-    config: {
-      responseModalities: [Modality.IMAGE, Modality.TEXT],
-    },
+    contents: [userImagePart, { text: prompt }],
+    config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
   });
 
   return handleApiResponse(response);
@@ -75,8 +109,8 @@ const generateVirtualTryOnImage = async (
   modelImageUrl: string,
   garmentImageDataUrl: string,
 ): Promise<string> => {
-  const modelImagePart = dataUrlToPart(modelImageUrl);
-  const garmentImagePart = dataUrlToPart(garmentImageDataUrl);
+  const modelImagePart = await toInlineImagePart(modelImageUrl);
+  const garmentImagePart = await toInlineImagePart(garmentImageDataUrl);
 
   const prompt = `You are an expert virtual try-on AI. You will be given a 'model image' and a 'garment image'. Your task is to create a new photorealistic image where the person from the 'model image' is wearing the clothing from the 'garment image'.
 
@@ -89,10 +123,8 @@ const generateVirtualTryOnImage = async (
 
   const response = await ai.models.generateContent({
     model,
-    contents: { parts: [modelImagePart, garmentImagePart, { text: prompt }] },
-    config: {
-      responseModalities: [Modality.IMAGE, Modality.TEXT],
-    },
+    contents: [modelImagePart, garmentImagePart, { text: prompt }],
+    config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
   });
 
   return handleApiResponse(response);
@@ -103,20 +135,20 @@ const generatePoseVariation = async (
   tryOnImageUrl: string,
   poseInstruction: string,
 ): Promise<string> => {
-  const tryOnImagePart = dataUrlToPart(tryOnImageUrl);
+  const tryOnImagePart = await toInlineImagePart(tryOnImageUrl);
+
   const prompt = `You are an expert fashion photographer AI. Take this image and regenerate it from a different perspective. The person, clothing, and background style must remain identical. The new perspective should be: "${poseInstruction}". Return ONLY the final image.`;
 
   const response = await ai.models.generateContent({
     model,
-    contents: { parts: [tryOnImagePart, { text: prompt }] },
-    config: {
-      responseModalities: [Modality.IMAGE, Modality.TEXT],
-    },
+    contents: [tryOnImagePart, { text: prompt }],
+    config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
   });
 
   return handleApiResponse(response);
 };
 
+// --------- API Route Handler ---------
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -132,7 +164,7 @@ export async function POST(request: NextRequest) {
     let result: string;
 
     switch (action) {
-      case "generateModel":
+      case "generateModel": {
         const { userImage } = params;
         if (!userImage) {
           return NextResponse.json(
@@ -142,8 +174,9 @@ export async function POST(request: NextRequest) {
         }
         result = await generateModelImage(userImage);
         break;
+      }
 
-      case "generateTryOn":
+      case "generateTryOn": {
         const { modelImage, garmentImage } = params;
         if (!modelImage || !garmentImage) {
           return NextResponse.json(
@@ -156,8 +189,9 @@ export async function POST(request: NextRequest) {
         }
         result = await generateVirtualTryOnImage(modelImage, garmentImage);
         break;
+      }
 
-      case "generatePose":
+      case "generatePose": {
         const { tryOnImage, poseInstruction } = params;
         if (!tryOnImage || !poseInstruction) {
           return NextResponse.json(
@@ -170,6 +204,7 @@ export async function POST(request: NextRequest) {
         }
         result = await generatePoseVariation(tryOnImage, poseInstruction);
         break;
+      }
 
       default:
         return NextResponse.json(
@@ -184,10 +219,8 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ result });
   } catch (error) {
     console.error("API Error:", error);
-
     const errorMessage =
       error instanceof Error ? error.message : "An unexpected error occurred";
-
     return NextResponse.json({ error: errorMessage }, { status: 500 });
   }
 }

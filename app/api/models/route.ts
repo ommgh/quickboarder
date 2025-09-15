@@ -64,7 +64,10 @@ export async function GET(request: NextRequest) {
       },
     });
 
-    return NextResponse.json(models);
+    return NextResponse.json({
+      success: true,
+      models,
+    });
   } catch (error) {
     console.error("Models retrieval error:", error);
     return NextResponse.json(

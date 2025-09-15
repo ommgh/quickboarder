@@ -223,7 +223,7 @@ export default function CatalogPage() {
       </div>
 
       {loading ? (
-        <div className="flex items-center justify-center py-12">
+        <div className="flex h-screen items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin" />
           <span className="ml-2">Loading products...</span>
         </div>
@@ -245,6 +245,7 @@ export default function CatalogPage() {
                     alt={product.name}
                     width={400}
                     height={225}
+                    className="object-cover"
                   />
                 </div>
                 <CardHeader>
