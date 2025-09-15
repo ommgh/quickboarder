@@ -1,8 +1,7 @@
-// file: /api/image/model/route.ts
+export const runtime = "nodejs";
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI, GenerateContentResponse, Modality } from "@google/genai";
-import { Buffer } from "buffer"; // needed for base64 conversion in Node runtime
-
+import { Buffer } from "buffer";
 const GEMINI_API_KEY = process.env.GEMINI_MODEL_API_KEY!;
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 const model = "gemini-2.5-flash-image-preview";
