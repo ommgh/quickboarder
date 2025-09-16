@@ -1,19 +1,11 @@
+// file: /api/image/model/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI, GenerateContentResponse, Modality } from "@google/genai";
+import { Buffer } from "buffer"; // needed for base64 conversion in Node runtime
 
 const GEMINI_API_KEY = process.env.GEMINI_MODEL_API_KEY!;
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 const model = "gemini-2.5-flash-image-preview";
-
-/** Convert ArrayBuffer to base64 using Web APIs */
-const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
-  const bytes = new Uint8Array(buffer);
-  let binary = "";
-  for (let i = 0; i < bytes.byteLength; i++) {
-    binary += String.fromCharCode(bytes[i]);
-  }
-  return btoa(binary);
-};
 
 /** Parse a data: URL (synchronous) */
 const parseDataUrl = (dataUrl: string): { mimeType: string; data: string } => {
@@ -43,7 +35,7 @@ const fetchImageUrlToBase64 = async (
     );
   }
   const arrayBuffer = await res.arrayBuffer();
-  const base64 = arrayBufferToBase64(arrayBuffer);
+  const base64 = Buffer.from(arrayBuffer).toString("base64");
   return { mimeType: contentType, data: base64 };
 };
 
