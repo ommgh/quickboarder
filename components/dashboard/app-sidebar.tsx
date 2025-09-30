@@ -17,10 +17,12 @@ import { GearIcon } from "@radix-ui/react-icons";
 import Image from "next/image";
 import {
   IconBox,
+  IconBrandAsana,
   IconBuildingStore,
   IconBuildingWarehouse,
   IconForklift,
   IconManFilled,
+  IconPerspectiveOff,
   IconSettings,
 } from "@tabler/icons-react";
 import { Maname } from "next/font/google";
@@ -37,6 +39,11 @@ const data = {
       title: "Product",
       url: "/dashboard/product",
       icon: IconBox,
+    },
+    {
+      title: "Brand",
+      url: "/dashboard/brand",
+      icon: IconBrandAsana,
     },
     {
       title: "Catalog",
