@@ -25,10 +25,15 @@ export function NavMain({
       <SidebarMenu>
         {items.map((item) => (
           <SidebarMenuItem key={item.title}>
-            <SidebarMenuButton size="lg" tooltip={item.title}>
-              <Link href={item.url} prefetch className="flex flex-row gap-2">
-                {item.icon && <item.icon size={"16"} />}
-                <span>{item.title}</span>
+            <SidebarMenuButton
+              size="lg"
+              tooltip={item.title}
+              className=""
+              asChild
+            >
+              <Link href={item.url} prefetch>
+                {item.icon && <item.icon size={"18"} />}
+                <span className="truncate">{item.title}</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>

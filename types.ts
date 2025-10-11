@@ -12,3 +12,9 @@ export interface OutfitLayer {
   garment: WardrobeItem | null; // null represents the base model layer
   poseImages: Record<string, string>; // Maps pose instruction to image URL
 }
+
+export interface Model {
+  id: string;
+  name: string;
+  ImageUrl: string;
+}

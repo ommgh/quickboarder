@@ -119,7 +119,7 @@ export default function CatalogPage() {
         setLoading(false);
       }
     },
-    [pagination.limit],
+    [pagination.limit]
   );
 
   const filteredProducts = products.filter((product) => {
@@ -168,7 +168,9 @@ export default function CatalogPage() {
     const dataUri =
       "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
 
-    const exportFileDefaultName = `quickboarder-catalog-${new Date().toISOString().split("T")[0]}.json`;
+    const exportFileDefaultName = `quickboarder-catalog-${
+      new Date().toISOString().split("T")[0]
+    }.json`;
     const linkElement = document.createElement("a");
     linkElement.setAttribute("href", dataUri);
     linkElement.setAttribute("download", exportFileDefaultName);
@@ -215,7 +217,7 @@ export default function CatalogPage() {
             Export Catalog
           </Button>
           <Button asChild>
-            <Link href="/dashboard">
+            <Link href="/dashboard/product">
               <Plus className="mr-2 h-4 w-4" />
               Add New Product
             </Link>

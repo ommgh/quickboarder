@@ -25,12 +25,6 @@ interface Model {
   ImageUrl: string;
 }
 
-interface ModelResponse {
-  success: boolean;
-  models: Model[];
-  error: string;
-}
-
 type WorkflowStep =
   | "model-selection"
   | "product-upload"
@@ -51,7 +45,7 @@ export default function Page() {
   >(null);
   const [productImage, setProductImage] = useState<File | null>(null);
   const [productImagePreview, setProductImagePreview] = useState<string | null>(
-    null,
+    null
   );
   const [generatedImage, setGeneratedImage] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -116,7 +110,7 @@ export default function Page() {
     try {
       const response = await generateVirtualTryOnImage(
         selectedModel.ImageUrl,
-        productImage,
+        productImage
       );
       setGeneratedImage(response);
       setCurrentStep("result");
@@ -146,7 +140,7 @@ export default function Page() {
 
     const base64Data = generatedImage.replace(
       /^data:image\/[a-z]+;base64,/,
-      "",
+      ""
     );
     const result = await saveProduct(productData, base64Data);
 
@@ -438,8 +432,8 @@ export default function Page() {
                     {saveState.isUploading
                       ? `Uploading... ${Math.round(saveState.uploadProgress)}%`
                       : saveState.isSaving
-                        ? "Saving..."
-                        : "Save to Catalog"}
+                      ? "Saving..."
+                      : "Save to Catalog"}
                   </Button>
                 )}
               </CardFooter>

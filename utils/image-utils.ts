@@ -1,5 +1,3 @@
-// file: lib/utils/image-utils.ts
-
 /**
  * Converts a base64 data URL to a File object
  */
@@ -33,7 +31,7 @@ export function base64ToFile(base64Data: string, filename: string): File {
  * Gets image dimensions from a base64 string
  */
 export function getImageDimensions(
-  base64Data: string,
+  base64Data: string
 ): Promise<{ width: number; height: number }> {
   return new Promise((resolve, reject) => {
     const img = new Image();
