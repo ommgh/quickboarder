@@ -16,10 +16,10 @@ import {
 import Image from "next/image";
 import {
   IconBox,
+  IconBrandGoogleAnalytics,
   IconBuildingStore,
-  IconChartArrowsVertical,
-  IconForklift,
-  IconManFilled,
+  IconMan,
+  IconMap,
   IconSettings,
 } from "@tabler/icons-react";
 
@@ -41,17 +41,17 @@ const data = {
     {
       title: "Catalog",
       url: "/dashboard/catalog",
-      icon: IconForklift,
+      icon: IconMap,
     },
     {
       title: "Analytics",
       url: "/dashboard/analytics",
-      icon: IconChartArrowsVertical,
+      icon: IconBrandGoogleAnalytics,
     },
     {
       title: "Models",
       url: "/dashboard/models",
-      icon: IconManFilled,
+      icon: IconMan,
     },
     {
       title: "Settings",
@@ -73,15 +73,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Image
                     src="https://res.cloudinary.com/dcwsgwsfw/image/upload/v1760208544/quickboarder/Q-DARK_sio8kl.png"
                     alt="Q"
-                    height={"32"}
-                    width={"32"}
+                    height={32}
+                    width={32}
                     className="hidden dark:block"
                   />
                   <Image
                     src="https://res.cloudinary.com/dcwsgwsfw/image/upload/v1760208545/quickboarder/Q-LIGHT_tyy1gt.png"
                     alt="Q"
-                    height={"32"}
-                    width={"32"}
+                    height={32}
+                    width={32}
                     className="dark:hidden"
                   />
                 </div>
