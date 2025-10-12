@@ -22,14 +22,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/use-toast";
 
@@ -226,7 +218,7 @@ export default function CatalogPage() {
       </div>
 
       {loading ? (
-        <div className="flex h-screen items-center justify-center py-12">
+        <div className="flex h-[100%] items-center justify-center py-12">
           <Loader2 className="h-8 w-8 animate-spin" />
           <span className="ml-2">Loading products...</span>
         </div>
@@ -241,8 +233,11 @@ export default function CatalogPage() {
         <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {filteredProducts.length > 0 ? (
             filteredProducts.map((product) => (
-              <Card key={product.id} className="overflow-hidden py-0">
-                <div className="overflow-hidden">
+              <Card
+                key={product.id}
+                className="overflow-hidden py-0 flex flex-col"
+              >
+                <div className="relative overflow-hidden h-[225px]">
                   <Image
                     src={product.ImageUrl || "/placeholder.svg"}
                     alt={product.name}
@@ -251,7 +246,7 @@ export default function CatalogPage() {
                     className="object-cover"
                   />
                 </div>
-                <CardHeader>
+                <CardHeader className="flex-grow">
                   <CardTitle className="text-lg">{product.name}</CardTitle>
                   <CardDescription className="flex flex-col gap-2 mt-2 text-xs ">
                     <span className="line-clamp-2">{product.description}</span>

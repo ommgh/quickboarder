@@ -14,7 +14,14 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/components/ui/use-toast";
 import { useSaveProduct } from "@/hooks/use-save-product";
 import { generateVirtualTryOnImage } from "@/services/geminiService";
-import { Loader2, Upload, ArrowLeft, Check, Edit } from "lucide-react";
+import {
+  Loader2,
+  Upload,
+  ArrowLeft,
+  Check,
+  Edit,
+  ChevronRight,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -54,8 +61,10 @@ export default function Page() {
   const [isEditingDescription, setIsEditingDescription] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const [productName, setProductName] = useState("New Product");
-  const [description, setDescription] = useState("Description");
+  const [productName, setProductName] = useState("Give a name to your product");
+  const [description, setDescription] = useState(
+    "Write a description for your product"
+  );
   const [price, setPrice] = useState("");
   const [category, setCategory] = useState("Apparel");
 
@@ -210,23 +219,27 @@ export default function Page() {
       <div className="mb-8">
         <div className="flex items-center space-x-4 text-sm text-muted-foreground">
           <span
+            onClick={handleBackToModels}
             className={
               currentStep === "model-selection"
                 ? "text-primary font-medium"
-                : ""
+                : "cursor-pointer hover:underline"
             }
           >
-            1. Select Model
+            Select Model
           </span>
-          <span>→</span>
+          <ChevronRight size={16} />
           <span
+            onClick={handleBackToUpload}
             className={
-              currentStep === "product-upload" ? "text-primary font-medium" : ""
+              currentStep === "product-upload"
+                ? "text-primary font-medium"
+                : "cursor-pointer hover:underline"
             }
           >
-            2. Upload Product
+            Upload Product
           </span>
-          <span>→</span>
+          <ChevronRight size={16} />
           <span
             className={
               currentStep === "generating" || currentStep === "result"
@@ -234,7 +247,7 @@ export default function Page() {
                 : ""
             }
           >
-            3. Generate & Save
+            Generate
           </span>
         </div>
       </div>
@@ -242,7 +255,6 @@ export default function Page() {
       {/* Model Selection Step */}
       {currentStep === "model-selection" && (
         <div>
-          <h1 className="text-3xl font-bold mb-6">Select a Model</h1>
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {models.length > 0 ? (
               models.map((model) => (
@@ -282,12 +294,6 @@ export default function Page() {
       {/* Product Upload Step */}
       {currentStep === "product-upload" && selectedModel && (
         <div>
-          <div className="flex items-center gap-4 mb-6">
-            <Button onClick={handleBackToModels} variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-            </Button>
-          </div>
-
           <div className="grid sm:grid-cols-2 gap-6 lg:grid-cols-3">
             {/* Selected Model */}
             <div>
@@ -315,7 +321,7 @@ export default function Page() {
             {/* Product Upload */}
             <div>
               {!productImagePreview ? (
-                <Card className="p-8 border-dashed border-2 border-muted-foreground/25">
+                <Card className="p-8 border-dashed border-2 border-muted-foreground/25 h-full flex items-center justify-center">
                   <div className="text-center">
                     <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                     <p className="text-lg mb-2">Upload apparel image</p>
@@ -371,7 +377,7 @@ export default function Page() {
 
       {/* Generating Step */}
       {currentStep === "generating" && (
-        <div className="text-center py-16">
+        <div className="h-[100%] text-center py-16">
           <Loader2 className="h-16 w-16 animate-spin mx-auto mb-4" />
           <h2 className="text-2xl font-bold mb-2">Generating Try-On Image</h2>
           <p className="text-muted-foreground">
@@ -383,13 +389,6 @@ export default function Page() {
       {/* Result Step */}
       {currentStep === "result" && generatedImage && selectedModel && (
         <div>
-          <div className="flex items-center gap-4 mb-6">
-            <Button onClick={handleBackToUpload} variant="outline" size="sm">
-              <ArrowLeft className="h-4 w-4 mr-2" />
-            </Button>
-            <h1 className="text-3xl font-bold">Try-On Result</h1>
-          </div>
-
           <div className="grid gap-6 md:grid-cols-2">
             {/* Image Section */}
             <Card>
@@ -516,7 +515,7 @@ export default function Page() {
 
                 {/* Price */}
                 <div className="space-y-2">
-                  <Label htmlFor="price">Price (Optional)</Label>
+                  <Label htmlFor="price">Price</Label>
                   <Input
                     id="price"
                     placeholder="$0.00"
