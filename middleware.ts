@@ -8,20 +8,17 @@ import {
 
 export function middleware(req: NextRequest) {
   const { nextUrl, cookies } = req;
-
-  const token =
-    cookies.get("next-auth.session-token")?.value ||
-    cookies.get("__Secure-next-auth.session-token")?.value;
-
+  const token = cookies.get("authjs.session-token")?.value;
   const isLoggedIn = !!token;
+  const pathname = nextUrl.pathname;
 
-  const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
-  const isPrivateRoute = privateRoutes.includes(nextUrl.pathname);
-  const isAuthRoute = authRoutes.includes(nextUrl.pathname);
+  const isApiAuthRoute = pathname.startsWith(apiAuthPrefix);
+  const isPrivateRoute = privateRoutes.some(
+    (route) => pathname === route || pathname.startsWith(`${route}/`)
+  );
+  const isAuthRoute = authRoutes.includes(pathname);
 
-  if (isApiAuthRoute) {
-    return NextResponse.next();
-  }
+  if (isApiAuthRoute) return NextResponse.next();
 
   if (isAuthRoute && isLoggedIn) {
     return NextResponse.redirect(new URL(DEFAULT_AUTH_REDIRECT, nextUrl));
