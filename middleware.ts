@@ -8,7 +8,9 @@ import {
 
 export function middleware(req: NextRequest) {
   const { nextUrl, cookies } = req;
-  const token = cookies.get("authjs.session-token")?.value;
+  const token =
+    cookies.get("authjs.session-token")?.value ||
+    cookies.get("__Secure-authjs.session-token")?.value;
   const isLoggedIn = !!token;
   const pathname = nextUrl.pathname;
 
