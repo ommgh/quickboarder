@@ -1,5 +1,5 @@
 import type { NextConfig } from "next";
-
+import createMDX from "@next/mdx";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -18,5 +18,11 @@ const nextConfig: NextConfig = {
     ],
   },
 };
+const withMDX = createMDX({
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+});
 
-export default nextConfig;
+export default withMDX(nextConfig);

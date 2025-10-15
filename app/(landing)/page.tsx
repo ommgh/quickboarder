@@ -1,29 +1,26 @@
-"use client";
+import { Background } from "@/components/background";
+import { FAQ } from "@/components/blocks/faq";
+import { Features } from "@/components/blocks/features";
+import { Hero } from "@/components/blocks/hero";
+import { Logos } from "@/components/blocks/logos";
+import { Pricing } from "@/components/blocks/pricing";
+import { ResourceAllocation } from "@/components/blocks/resource-allocation";
+import { Testimonials } from "@/components/blocks/testimonials";
 
-import Hero from "./hero";
-import Features from "./features";
-import Working from "./working";
-import Testimonials from "./testimonials";
-import Pricing from "./pricing";
-import FAQ from "./faq";
-import CTA from "./cta";
-import Footer from "./footer";
-import { HeroHeader } from "./header";
-
-export default function LandingPage() {
+export default function Home() {
   return (
-    <div className="flex min-h-screen w-full flex-col">
-      <HeroHeader />
-      <main className="flex-1">
+    <>
+      <Background className="via-muted to-muted/80">
         <Hero />
+        <Logos />
         <Features />
-        <Working />
-        <Testimonials />
+        <ResourceAllocation />
+      </Background>
+      <Testimonials />
+      <Background variant="bottom">
         <Pricing />
         <FAQ />
-        <CTA />
-      </main>
-      <Footer />
-    </div>
+      </Background>
+    </>
   );
 }

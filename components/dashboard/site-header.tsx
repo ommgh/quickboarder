@@ -1,5 +1,5 @@
 "use client";
-import { ModeToggle } from "../mode-toggle";
+import { ThemeToggle } from "@/components/theme-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 
@@ -13,7 +13,7 @@ export function SiteHeader() {
       <SidebarTrigger className="md:hidden" />
 
       <div className="flex-1 flex items-center justify-end gap-2">
-        <ModeToggle />
+        <ThemeToggle />
         <Avatar className="h-8 w-8 rounded-lg">
           <AvatarImage src={avatar} alt={name} />
           <AvatarFallback>
