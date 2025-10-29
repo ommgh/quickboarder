@@ -7,7 +7,7 @@ import { auth } from "@/auth";
 import { Toaster } from "@/components/ui/toaster";
 import { StyleGlideProvider } from "@/components/styleglide-provider";
 import { ThemeProvider } from "@/components/theme-provider";
-
+import { Analytics } from "@vercel/analytics/next";
 const dmSans = DM_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -23,29 +23,29 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Mainline - Modern Next.js Template",
-    template: "%s | Mainline",
+    default: "Quickboarder - Get your products e-commerce ready",
+    template: "%s | Quickboarder",
   },
   description:
-    "A modern Next.js template built with shadcn/ui, Tailwind & MDX. Open source - MIT License.",
+    "Quickboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
   keywords: [
-    "Next.js",
-    "nextjs template",
-    "nextjs theme",
-    "nextjs starter",
-    "shadcn template",
-    "shadcn theme",
-    "shadcn starter",
-    "tailwind template",
-    "tailwind theme",
-    "tailwind starter",
-    "mdx template",
-    "mdx theme",
-    "mdx starter",
+    "e-commerce",
+    "shopify",
+    "ai",
+    "enhance",
+    "image generation",
+    "product",
+    "presentation",
+    "shopping",
+    "business",
+    "online store",
+    "marketing",
+    "ai tools",
+    "models",
   ],
-  authors: [{ name: "shadcnblocks.com" }],
-  creator: "shadcnblocks.com",
-  publisher: "shadcnblocks.com",
+  authors: [{ name: "quickboarder.shop" }],
+  creator: "quickboarder.shop",
+  publisher: "quickboarder.shop",
   robots: {
     index: true,
     follow: true,
@@ -62,26 +62,26 @@ export const metadata: Metadata = {
     shortcut: [{ url: "/favicon/favicon.ico" }],
   },
   openGraph: {
-    title: "Mainline - Modern Next.js Template",
+    title: "Quickboarder - Get your products e-commerce ready",
     description:
-      "A modern Next.js template built with shadcn/ui, Tailwind & MDX. Open source - MIT License.",
-    siteName: "Mainline",
+      "Quickboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
+    siteName: "Quickboarder",
     images: [
       {
         url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: "Mainline - Modern Next.js Template",
+        alt: "Quickboarder - Get your products e-commerce ready",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mainline - Modern Next.js Template",
+    title: "Quickboarder - Get your products e-commerce ready",
     description:
-      "A modern Next.js template built with shadcn/ui, Tailwind & MDX. Open source - MIT License.",
+      "Quickboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
     images: ["/og-image.jpg"],
-    creator: "@ausrobdev",
+    creator: "@ommshx",
   },
 };
 
@@ -109,6 +109,7 @@ export default async function RootLayout({
           >
             <StyleGlideProvider />
             {children}
+            <Analytics />
             <Toaster />
           </ThemeProvider>
         </body>

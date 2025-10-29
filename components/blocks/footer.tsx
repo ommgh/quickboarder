@@ -33,7 +33,7 @@ export function Footer() {
         <div>
           <Button size="lg" className="mt-4" asChild>
             <a href="https://github.com/shadcnblocks/mainline-nextjs-template">
-              Get template
+              Get Started
             </a>
           </Button>
         </div>

@@ -17,21 +17,21 @@ export const Logos = () => {
   const topRowCompanies = [
     {
       name: "Mercury",
-      logo: "/logos/mercury.svg",
+      logo: "/logos/snitch.png",
       width: 143,
       height: 26,
       href: "https://mercury.com",
     },
     {
       name: "Watershed",
-      logo: "/logos/watershed.svg",
+      logo: "/logos/sugar.png",
       width: 154,
       height: 31,
       href: "https://watershed.com",
     },
     {
       name: "Retool",
-      logo: "/logos/retool.svg",
+      logo: "/logos/nykaa.svg",
       width: 113,
       height: 22,
       href: "https://retool.com",

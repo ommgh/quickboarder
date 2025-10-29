@@ -2,10 +2,10 @@ import Image from "next/image";
 
 import {
   ArrowRight,
-  Blend,
+  Barcode,
   ChartNoAxesColumn,
-  CircleDot,
-  Diamond,
+  PersonStanding,
+  Sparkles,
 } from "lucide-react";
 
 import { DashedLine } from "@/components/dashed-line";
@@ -13,23 +13,23 @@ import { Button } from "@/components/ui/button";
 
 const features = [
   {
-    title: "Tailored workflows",
-    description: "Track progress across custom issue flows for your team.",
-    icon: CircleDot,
+    title: "AI Image Enhancement",
+    description: "Enhance product images with AI for better quality",
+    icon: Sparkles,
   },
   {
-    title: "Cross-team projects",
-    description: "Collaborate across teams and departments.",
-    icon: Blend,
+    title: "Barcode Scanning",
+    description: "Quickly add products using barcode scanning",
+    icon: Barcode,
   },
   {
-    title: "Milestones",
-    description: "Break projects down into concrete phases.",
-    icon: Diamond,
+    title: "Models Library",
+    description: "Utilize various AI models for different product types",
+    icon: PersonStanding,
   },
   {
-    title: "Progress insights",
-    description: "Track scope, velocity, and progress over time.",
+    title: "Analytics Dashboard",
+    description: "Track product performance with detailed analytics",
     icon: ChartNoAxesColumn,
   },
 ];
@@ -41,18 +41,18 @@ export const Hero = () => {
         {/* Left side - Main content */}
         <div className="flex-1">
           <h1 className="text-foreground max-w-160 text-3xl tracking-tight md:text-4xl lg:text-5xl xl:whitespace-nowrap">
-            Mainline Next.js template
+            Quickboarder
           </h1>
 
           <p className="text-muted-foreground text-1xl mt-5 md:text-3xl">
-            Mainline is an open-source website template built with shadcn/ui,
-            Tailwind 4 & Next.js
+            Get your products e-commerce ready in minutes with AI-powered
+            descriptions, titles, and more.
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-4 lg:flex-nowrap">
             <Button asChild>
               <a href="https://github.com/shadcnblocks/mainline-nextjs-template">
-                Get template
+                Get Started
               </a>
             </Button>
             <Button
@@ -64,7 +64,7 @@ export const Hero = () => {
                 href="https://shadcnblocks.com"
                 className="max-w-56 truncate text-start md:max-w-none"
               >
-                Built by shadcnblocks.com
+                Watch Demo
                 <ArrowRight className="stroke-3" />
               </a>
             </Button>
@@ -103,7 +103,7 @@ export const Hero = () => {
       <div className="mt-12 max-lg:ml-6 max-lg:h-[550px] max-lg:overflow-hidden md:mt-20 lg:container lg:mt-24">
         <div className="relative h-[793px] w-full">
           <Image
-            src="/hero.webp"
+            src="/hero.png"
             alt="hero"
             fill
             className="rounded-2xl object-cover object-left-top shadow-lg max-lg:rounded-tr-none"

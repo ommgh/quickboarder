@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 
 const topItems = [
   {
-    title: "Reusable issue templates.",
+    title: "Multiple Product Categories.",
     description:
-      "Draft lightning-fast documents with our Smart Instructions and Templates.",
+      "Transform multiple category products with advanced management tools",
     images: [
       {
         src: "/resource-allocation/templates.webp",
@@ -22,37 +22,38 @@ const topItems = [
     fade: [""],
   },
   {
-    title: "Simplify your stack.",
-    description: "No more Confluence, SharePoint, or Microsoft Word.",
+    title: "Integrates with all e-commerce channels.",
+    description:
+      "Connect with your desired e-commerce platforms seamlessly and sell",
     images: [
-      { src: "/logos/jira.svg", alt: "Jira logo", width: 48, height: 48 },
-      { src: "/logos/excel.svg", alt: "Excel logo", width: 48, height: 48 },
+      { src: "/logos/shopify.svg", alt: "Jira logo", width: 48, height: 48 },
+      { src: "/logos/amazon.svg", alt: "Excel logo", width: 48, height: 48 },
       {
-        src: "/logos/notion.svg",
+        src: "/logos/flipkart.svg",
         alt: "Notion logo",
         width: 48,
         height: 48,
       },
-      { src: "/logos/word.svg", alt: "Word logo", width: 48, height: 48 },
+      { src: "/logos/ebay.svg", alt: "Word logo", width: 48, height: 48 },
       {
-        src: "/logos/monday.svg",
+        src: "/logos/shopify.svg",
         alt: "Monday logo",
         width: 48,
         height: 48,
       },
       {
-        src: "/logos/drive.svg",
+        src: "/logos/ebay.svg",
         alt: "Google Drive logo",
         width: 48,
         height: 48,
       },
       {
-        src: "/logos/jira.svg",
+        src: "/logos/gumroad.svg",
         alt: "Jira logo",
         width: 48,
         height: 48,
       },
-      { src: "/logos/asana.svg", alt: "Asana logo", width: 48, height: 48 },
+      { src: "/logos/etsy.svg", alt: "Asana logo", width: 48, height: 48 },
     ],
     className:
       "flex-1 [&>.title-container]:mb-5 md:[&>.title-container]:mb-8 md:[&>.title-container]:translate-x-2 xl:[&>.title-container]:translate-x-4 [&>.title-container]:translate-x-0",
@@ -62,9 +63,9 @@ const topItems = [
 
 const bottomItems = [
   {
-    title: "Graveyard it.",
+    title: "Analaytics.",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do.",
+      "Track your product performance with real-time analytics and insights.",
     images: [
       {
         src: "/resource-allocation/graveyard.webp",
@@ -78,9 +79,9 @@ const bottomItems = [
     fade: ["bottom"],
   },
   {
-    title: "Task discussions.",
+    title: "AI Try-On.",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod.",
+      "Enhance customer experience with AI-powered virtual try-on features",
     images: [
       {
         src: "/resource-allocation/discussions.webp",
@@ -119,7 +120,7 @@ export const ResourceAllocation = () => {
     >
       <div className="">
         <h2 className="container text-center text-3xl tracking-tight text-balance sm:text-4xl md:text-5xl lg:text-6xl">
-          Mainline your resource allocation and execution
+          The Complete E-Commerce Suite for Business Growth
         </h2>
 
         <div className="mt-8 md:mt-12 lg:mt-20">
