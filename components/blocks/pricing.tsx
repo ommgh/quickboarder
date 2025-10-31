@@ -15,36 +15,31 @@ const plans = [
     monthlyPrice: "$0",
     yearlyPrice: "$0",
     description: "Free for everyone",
-    features: [
-      "Unlimited members",
-      "2 teams",
-      "500 issues",
-      "Slack and Github integrations",
-    ],
+    features: ["1 Store", "10 Products Catalog", "2 Default Models"],
   },
   {
-    name: "Startup",
-    monthlyPrice: "$8",
-    yearlyPrice: "$6",
+    name: "Growth",
+    monthlyPrice: "$10",
+    yearlyPrice: "$99",
     features: [
-      "All free plan features and...",
-      "Mainline AI",
-      "Unlimited teams",
-      "Unlimited issues and file uploads",
-      "Mainline Insights",
-      "Admin roles",
+      "Upto 5 Stores",
+      "Upto 100 Products Catalog",
+      "5 Custom Models",
+      "Analytics Dashboard",
+      "Custom Branding",
     ],
   },
   {
     name: "Enterprise",
-    monthlyPrice: "$8",
-    yearlyPrice: "$6",
+    monthlyPrice: "$49",
+    yearlyPrice: "$499",
     features: [
-      "All free plan features and...",
-      "Mainline AI",
-      "Supermainline AGI",
-      "Free daily catered lunch",
-      "random HIPPA audits",
+      "Upto 25 Stores",
+      "Upto 1000 Products Catalog",
+      "50 Custom Models",
+      "Analytics Dashboard",
+      "Custom Branding",
+      "Priority Support",
     ],
   },
 ];
@@ -60,9 +55,8 @@ export const Pricing = ({ className }: { className?: string }) => {
             Pricing
           </h2>
           <p className="text-muted-foreground mx-auto max-w-xl leading-snug text-balance">
-            Use Mainline for free with your whole team. Upgrade to enable
-            unlimited issues, enhanced security controls, and additional
-            features.
+            Use Quickboarder for free with all the features. Upgrade to enable
+            higher limits and premium features.
           </p>
         </div>
 
@@ -84,7 +78,6 @@ export const Pricing = ({ className }: { className?: string }) => {
                       {isAnnual ? plan.yearlyPrice : plan.monthlyPrice}{" "}
                       {plan.name !== "Free" && (
                         <span className="text-muted-foreground">
-                          per user/
                           {isAnnual ? "year" : "month"}
                         </span>
                       )}

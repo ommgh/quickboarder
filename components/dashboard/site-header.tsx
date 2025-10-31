@@ -4,6 +4,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 
 import { signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 export function SiteHeader() {
   const session = useSession();
   const name = session.data?.user.name || "";
@@ -14,12 +15,14 @@ export function SiteHeader() {
 
       <div className="flex-1 flex items-center justify-end gap-2">
         <ThemeToggle />
-        <Avatar className="h-8 w-8 rounded-lg">
-          <AvatarImage src={avatar} alt={name} />
-          <AvatarFallback>
-            {name ? name.charAt(0).toUpperCase() : "U"}
-          </AvatarFallback>
-        </Avatar>
+        <Link href="/dashboard/settings">
+          <Avatar className="h-8 w-8 rounded-lg">
+            <AvatarImage src={avatar} alt={name} />
+            <AvatarFallback>
+              {name ? name.charAt(0).toUpperCase() : "U"}
+            </AvatarFallback>
+          </Avatar>
+        </Link>
       </div>
     </header>
   );

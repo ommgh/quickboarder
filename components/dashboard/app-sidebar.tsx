@@ -69,23 +69,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
               <Link href="/" prefetch>
-                <div className="flex size-8 items-center justify-center">
+                <div className="flex items-center justify-center">
                   <Image
-                    src="https://res.cloudinary.com/dcwsgwsfw/image/upload/v1760208544/quickboarder/Q-DARK_sio8kl.png"
+                    src="/LOGO.svg"
                     alt="Q"
-                    height={32}
-                    width={32}
-                    className="hidden dark:block"
-                  />
-                  <Image
-                    src="https://res.cloudinary.com/dcwsgwsfw/image/upload/v1760208545/quickboarder/Q-LIGHT_tyy1gt.png"
-                    alt="Q"
-                    height={32}
-                    width={32}
-                    className="dark:hidden"
+                    height={38}
+                    width={38}
+                    className="dark:invert"
                   />
                 </div>
-                <span className="truncate font-bold text-xl">Quickboarder</span>
+                <span className="font-bold text-xl group-[collapse]:hidden">
+                  QUICKBOARDER
+                </span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
