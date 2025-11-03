@@ -51,7 +51,7 @@ export const Hero = () => {
 
           <div className="mt-8 flex flex-wrap items-center gap-4 lg:flex-nowrap">
             <Button asChild>
-              <a href="https://github.com/shadcnblocks/mainline-nextjs-template">
+              <a href="https://quickboarder.shop/dashboard">
                 Get Started
               </a>
             </Button>
