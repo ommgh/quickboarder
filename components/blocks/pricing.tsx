@@ -20,7 +20,7 @@ const plans = [
     features: ["1 Store", "10 Products Catalog", "2 Default Models"],
   },
   {
-    name: "Growth",
+    name: "Pro",
     monthlyPrice: "$10",
     yearlyPrice: "$99",
     features: [
@@ -30,11 +30,11 @@ const plans = [
       "Analytics Dashboard",
       "Custom Branding",
     ],
-    productId: "pdt_wfd3LGR9kPfIZ7v3PApsk",
+    productId: "pdt_ssW6HXq65rzlhoRZnHrbN",
   },
   {
     name: "Enterprise",
-    monthlyPrice: "$49",
+    monthlyPrice: "$99",
     yearlyPrice: "$499",
     features: [
       "Upto 25 Stores",
@@ -44,7 +44,7 @@ const plans = [
       "Custom Branding",
       "Priority Support",
     ],
-    productId: "",
+    productId: "pdt_L3eeBfmNkeLTUEdnfBWjJ",
   },
 ];
 
@@ -70,7 +70,7 @@ const handlePayment = async (productId?: string) => {
 };
 
 export const Pricing = ({ className }: { className?: string }) => {
-  const [isAnnual, setIsAnnual] = useState(true);
+  const [isAnnual, setIsAnnual] = useState(false);
   return (
     <section className={cn("py-28 lg:py-32", className)}>
       <div className="container max-w-5xl">
@@ -89,7 +89,7 @@ export const Pricing = ({ className }: { className?: string }) => {
             <Card
               key={plan.name}
               className={`h-full ${
-                plan.name === "Growth"
+                plan.name === "Pro"
                   ? "outline-primary origin-top outline-2"
                   : ""
               }`}
@@ -145,7 +145,7 @@ export const Pricing = ({ className }: { className?: string }) => {
                 <div className="pt-2">
                   <Button
                     className="w-full"
-                    variant={plan.name === "Growth" ? "default" : "outline"}
+                    variant={plan.name === "Pro" ? "default" : "outline"}
                     onClick={() => handlePayment(plan.productId)}
                   >
                     Get started

@@ -25,21 +25,21 @@ const ITEMS = [
   {
     label: "Features",
     href: "#features",
-    dropdownItems: [
-      {
-        title: "Modern product teams",
-        href: "/#feature-modern-teams",
-        description:
-          "Mainline is built on the habits that make the best product teams successful",
-      },
-      {
-        title: "Resource Allocation",
-        href: "/#resource-allocation",
-        description: "Mainline your resource allocation and execution",
-      },
-    ],
+    // dropdownItems: [
+    //   {
+    //     title: "Modern product teams",
+    //     href: "/#feature-modern-teams",
+    //     description:
+    //       "Mainline is built on the habits that make the best product teams successful",
+    //   },
+    //   {
+    //     title: "Resource Allocation",
+    //     href: "/#resource-allocation",
+    //     description: "Mainline your resource allocation and execution",
+    //   },
+    // ],
   },
-  { label: "About Us", href: "/about" },
+  // { label: "About Us", href: "/about" },
   { label: "Pricing", href: "/pricing" },
   { label: "FAQ", href: "/faq" },
   { label: "Contact", href: "/contact" },

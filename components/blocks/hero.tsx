@@ -55,7 +55,7 @@ export const Hero = () => {
                 Get Started
               </a>
             </Button>
-            <Button
+            {/*<Button
               variant="outline"
               className="from-background h-auto gap-2 bg-linear-to-r to-transparent shadow-md"
               asChild
@@ -67,7 +67,7 @@ export const Hero = () => {
                 Watch Demo
                 <ArrowRight className="stroke-3" />
               </a>
-            </Button>
+            </Button>*/}
           </div>
         </div>
 
