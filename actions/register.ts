@@ -22,11 +22,16 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     return { error: "User already exists" };
   }
 
-  await db.user.create({
+  const user = await db.user.create({
     data: {
       email,
       password: hashedPassword,
       name,
+    },
+  });
+  await db.subscription.create({
+    data: {
+      userId: user.id,
     },
   });
 

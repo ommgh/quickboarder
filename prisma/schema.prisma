@@ -20,17 +20,17 @@ enum Plan {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String         @id @default(cuid())
   name          String?
-  email         String    @unique
+  email         String         @unique
   emailVerified DateTime?
   image         String?
   password      String?
-  role          UserRole  @default(USER)
+  role          UserRole       @default(USER)
   accounts      Account[]
   products      Product[]
   models        Models[]
-  plan          Plan      @default(FREE)
+  subscriptions Subscription[]
 }
 
 model Account {
@@ -61,6 +61,24 @@ model VerificationToken {
   expires DateTime
 
   @@unique([email, token])
+}
+
+model Subscription {
+  id                 String  @id @default(cuid())
+  name               Plan    @default(FREE)
+  userId             String  @unique
+  addons             String?
+  dodoCustomerId     String?
+  dodoSubscriptionId String?
+  status             String? @default("active")
+  productLimit       Int     @default(10)
+  modelLimit         Int     @default(2)
+  storeLimit         Int     @default(1)
+  nextBillingDate    String?
+  Analytics          Boolean @default(false)
+  Branding           Boolean @default(false)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model Product {

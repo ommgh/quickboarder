@@ -6,7 +6,7 @@ import { canHandle3D } from "@/lib/deviceSupport";
 import { RegisterForm } from "@/components/auth/register-form";
 
 const SimpleFallback = () => (
-  <div className="flex h-full w-full flex-col items-center justify-center bg-gradient-to-br from-black to-blue-950 p-8">
+  <div className="flex h-full w-full flex-col items-center justify-center">
     <div className="mb-8 text-center">
       <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-blue-500/20 p-4">
         <div className="h-full w-full rounded-full bg-blue-500/40 p-3">
@@ -31,7 +31,7 @@ const SimpleFallback = () => (
 );
 
 const LoadingFallback = () => (
-  <div className="flex h-full w-full items-center justify-center bg-black">
+  <div className="flex h-full w-full items-center justify-center">
     <div className="h-16 w-16 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
   </div>
 );
@@ -41,7 +41,7 @@ const PackageSurface = dynamic(
   {
     ssr: false,
     loading: () => <LoadingFallback />,
-  }
+  },
 );
 
 export default function LoginPage() {
@@ -55,14 +55,14 @@ export default function LoginPage() {
 
   return (
     <div className="grid min-h-svh w-full lg:grid-cols-2">
-      <div className="flex flex-col gap-4 p-6 md:p-10 bg-black w-full">
+      <div className="flex flex-col gap-4 p-6 md:p-10 w-full">
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-md sm:max-w-lg">
             <RegisterForm />
           </div>
         </div>
       </div>
-      <div className="relative hidden h-full w-full overflow-hidden bg-black lg:block">
+      <div className="relative hidden h-full w-full overflow-hidden lg:block">
         {isMounted && (can3D ? <PackageSurface /> : <SimpleFallback />)}
       </div>
     </div>

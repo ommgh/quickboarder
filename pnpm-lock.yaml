@@ -173,6 +173,9 @@ importers:
       cmdk:
         specifier: 1.1.1
         version: 1.1.1(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      dodopayments:
+        specifier: ^2.4.2
+        version: 2.4.2
       embla-carousel-react:
         specifier: 8.6.0
         version: 8.6.0(react@19.2.0)
@@ -239,6 +242,9 @@ importers:
       sonner:
         specifier: ^2.0.7
         version: 2.0.7(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
+      standardwebhooks:
+        specifier: ^1.0.0
+        version: 1.0.0
       tailwind-merge:
         specifier: ^3.3.1
         version: 3.3.1
@@ -2250,8 +2256,8 @@ packages:
   devlop@1.1.0:
     resolution: {integrity: sha512-RWmIqhcFf1lRYBvNmr7qTNuyCt/7/ns2jbpp1+PalgE/rDQcBT0fioSMUpJ93irlUhC5hrg4cYqe6U+0ImW0rA==}
 
-  dodopayments@2.4.1:
-    resolution: {integrity: sha512-xTikbk4SssTSM7r7En6JeOeTOhSWGEMj9+1eb7rAQLcUIwyVv7YQnotg87DC+hX+BIpZvTTGNwRnXzHKMIkwPA==}
+  dodopayments@2.4.2:
+    resolution: {integrity: sha512-KUCd5ZWri32LOUpBxd7hvq/4uuQW6niBBFspLkPKH78mvuMrklDWR/n+30scHoph3LGyu2RpKmhR4gNuMgkrOA==}
     hasBin: true
 
   dom-helpers@5.2.1:
@@ -3841,7 +3847,7 @@ snapshots:
 
   '@dodopayments/core@0.3.1(zod@3.25.76)':
     dependencies:
-      dodopayments: 2.4.1
+      dodopayments: 2.4.2
       standardwebhooks: 1.0.0
       zod: 3.25.76
 
@@ -5471,7 +5477,7 @@ snapshots:
     dependencies:
       dequal: 2.0.3
 
-  dodopayments@2.4.1:
+  dodopayments@2.4.2:
     dependencies:
       standardwebhooks: 1.0.0
 

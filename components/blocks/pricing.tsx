@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { cn } from "@/lib/utils";
+import { redirect } from "next/navigation";
+import { PaymentCreateResponse } from "dodopayments/resources/payments.mjs";
 
 const plans = [
   {
@@ -28,6 +30,7 @@ const plans = [
       "Analytics Dashboard",
       "Custom Branding",
     ],
+    productId: "pdt_wfd3LGR9kPfIZ7v3PApsk",
   },
   {
     name: "Enterprise",
@@ -41,12 +44,33 @@ const plans = [
       "Custom Branding",
       "Priority Support",
     ],
+    productId: "",
   },
 ];
 
+const handlePayment = async (productId?: string) => {
+  if (!productId) {
+    redirect("/dashboard");
+  }
+
+  const response = await fetch("/api/payments/checkout/sub", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      productId,
+    }),
+  });
+
+  const body = (await response.json()) as PaymentCreateResponse;
+  if (body.payment_link) {
+    window.location.href = body.payment_link;
+  }
+};
+
 export const Pricing = ({ className }: { className?: string }) => {
   const [isAnnual, setIsAnnual] = useState(true);
-
   return (
     <section className={cn("py-28 lg:py-32", className)}>
       <div className="container max-w-5xl">
@@ -60,64 +84,73 @@ export const Pricing = ({ className }: { className?: string }) => {
           </p>
         </div>
 
-        <div className="mt-8 grid items-start gap-5 text-start md:mt-12 md:grid-cols-3 lg:mt-20">
+        <div className="mt-8 grid items-stretch gap-5 text-start md:mt-12 md:grid-cols-3 lg:mt-20">
           {plans.map((plan) => (
             <Card
               key={plan.name}
-              className={`${
-                plan.name === "Startup"
-                  ? "outline-primary origin-top outline-4"
+              className={`h-full ${
+                plan.name === "Growth"
+                  ? "outline-primary origin-top outline-2"
                   : ""
               }`}
             >
-              <CardContent className="flex flex-col gap-7 px-6 py-5">
-                <div className="space-y-2">
-                  <h3 className="text-foreground font-semibold">{plan.name}</h3>
-                  <div className="space-y-1">
-                    <div className="text-muted-foreground text-lg font-medium">
-                      {isAnnual ? plan.yearlyPrice : plan.monthlyPrice}{" "}
-                      {plan.name !== "Free" && (
-                        <span className="text-muted-foreground">
-                          {isAnnual ? "year" : "month"}
-                        </span>
-                      )}
+              <CardContent className="flex flex-col gap-7 px-6 py-5 h-full">
+                <div className="flex-1 flex flex-col gap-6">
+                  <div className="space-y-2">
+                    <h3 className="text-foreground font-semibold">
+                      {plan.name}
+                    </h3>
+                    <div className="space-y-1">
+                      <div className="text-muted-foreground text-lg font-medium">
+                        {isAnnual ? plan.yearlyPrice : plan.monthlyPrice}{" "}
+                        {plan.name !== "Free" && (
+                          <span className="text-muted-foreground">
+                            {isAnnual ? "year" : "month"}
+                          </span>
+                        )}
+                      </div>
                     </div>
+                  </div>
+
+                  {plan.name !== "Free" ? (
+                    <div className="flex items-center gap-2">
+                      <Switch
+                        checked={isAnnual}
+                        onCheckedChange={() => setIsAnnual(!isAnnual)}
+                        aria-label="Toggle annual billing"
+                      />
+                      <span className="text-sm font-medium">
+                        Billed annually
+                      </span>
+                    </div>
+                  ) : (
+                    <span className="text-muted-foreground text-sm">
+                      {plan.description}
+                    </span>
+                  )}
+
+                  <div className="space-y-3">
+                    {plan.features.map((feature) => (
+                      <div
+                        key={feature}
+                        className="text-muted-foreground flex items-center gap-1.5"
+                      >
+                        <Check className="size-5 shrink-0" />
+                        <span className="text-sm">{feature}</span>
+                      </div>
+                    ))}
                   </div>
                 </div>
 
-                {plan.name !== "Free" ? (
-                  <div className="flex items-center gap-2">
-                    <Switch
-                      checked={isAnnual}
-                      onCheckedChange={() => setIsAnnual(!isAnnual)}
-                      aria-label="Toggle annual billing"
-                    />
-                    <span className="text-sm font-medium">Billed annually</span>
-                  </div>
-                ) : (
-                  <span className="text-muted-foreground text-sm">
-                    {plan.description}
-                  </span>
-                )}
-
-                <div className="space-y-3">
-                  {plan.features.map((feature) => (
-                    <div
-                      key={feature}
-                      className="text-muted-foreground flex items-center gap-1.5"
-                    >
-                      <Check className="size-5 shrink-0" />
-                      <span className="text-sm">{feature}</span>
-                    </div>
-                  ))}
+                <div className="pt-2">
+                  <Button
+                    className="w-full"
+                    variant={plan.name === "Growth" ? "default" : "outline"}
+                    onClick={() => handlePayment(plan.productId)}
+                  >
+                    Get started
+                  </Button>
                 </div>
-
-                <Button
-                  className="w-fit"
-                  variant={plan.name === "Startup" ? "default" : "outline"}
-                >
-                  Get started
-                </Button>
               </CardContent>
             </Card>
           ))}
