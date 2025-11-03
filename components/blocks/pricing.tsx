@@ -53,7 +53,7 @@ const handlePayment = async (productId?: string) => {
     redirect("/dashboard");
   }
 
-  const response = await fetch("/api/payments/checkout/sub", {
+  const response = await fetch("/api/payments/checkout", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

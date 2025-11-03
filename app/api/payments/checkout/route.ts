@@ -1,7 +1,6 @@
 import { auth } from "@/auth";
 import { dodopayments } from "@/lib/payments";
 import { APIError } from "dodopayments";
-import { redirect } from "next/navigation";
 import { NextRequest, NextResponse } from "next/server";
 import z from "zod";
 const validator = z.object({
@@ -9,14 +8,10 @@ const validator = z.object({
 });
 export const POST = async (request: NextRequest) => {
   const session = await auth();
-  // if (!session) {
-  //   redirect("/auth/login");
-  // }
   const body = await request.json();
   const paredBody = validator.safeParse(body);
   if (paredBody.success) {
     const { productId } = paredBody.data;
-    console.log(productId);
     try {
       const checkoutSession = await dodopayments.subscriptions.create({
         billing: {
