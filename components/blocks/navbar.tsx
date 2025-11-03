@@ -25,19 +25,19 @@ const ITEMS = [
   {
     label: "Features",
     href: "#features",
-    // dropdownItems: [
-    //   {
-    //     title: "Modern product teams",
-    //     href: "/#feature-modern-teams",
-    //     description:
-    //       "Mainline is built on the habits that make the best product teams successful",
-    //   },
-    //   {
-    //     title: "Resource Allocation",
-    //     href: "/#resource-allocation",
-    //     description: "Mainline your resource allocation and execution",
-    //   },
-    // ],
+    dropdownItems: [
+      {
+        title: "Modern product teams",
+        href: "/#feature-modern-teams",
+        description:
+          "Mainline is built on the habits that make the best product teams successful",
+      },
+      {
+        title: "Resource Allocation",
+        href: "/#resource-allocation",
+        description: "Mainline your resource allocation and execution",
+      },
+    ],
   },
   // { label: "About Us", href: "/about" },
   { label: "Pricing", href: "/pricing" },
@@ -86,13 +86,13 @@ export const Navbar = () => {
                           <NavigationMenuLink asChild>
                             <Link
                               href={item.href}
-                              className="group hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground flex items-center gap-4 rounded-md p-3 leading-none no-underline outline-hidden transition-colors select-none"
+                              className="group hover:bg-accent focus:bg-accent flex items-center gap-4 rounded-md p-3 leading-none no-underline outline-hidden transition-colors select-none"
                             >
                               <div className="space-y-1.5 transition-transform duration-300 group-hover:translate-x-1">
                                 <div className="text-sm leading-none font-medium">
                                   {item.title}
                                 </div>
-                                <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
+                                <p className="line-clamp-2 text-sm leading-snug">
                                   {item.description}
                                 </p>
                               </div>
