@@ -9,21 +9,23 @@ import { canHandle3D } from "@/lib/deviceSupport";
 const SimpleFallback = () => (
   <div className="flex h-full w-full flex-col items-center justify-center p-8">
     <div className="mb-8 text-center">
-      <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-blue-500/20 p-4">
-        <div className="h-full w-full rounded-full bg-blue-500/40 p-3">
-          <div className="h-full w-full rounded-full bg-blue-500/80"></div>
+      <div className="mx-auto mb-4 h-24 w-24 rounded-full bg-green-500/20 p-4">
+        <div className="h-full w-full rounded-full bg-green-500/40 p-3">
+          <div className="h-full w-full rounded-full bg-green-500/80"></div>
         </div>
       </div>
       <h2 className="mb-2 text-2xl font-bold text-white">QuickBoarder</h2>
-      <p className="text-blue-200">Get Your Buisness Online in Minutes</p>
+      <p className="text-accent-foreground">
+        Get Your Buisness Online in Minutes
+      </p>
     </div>
     <div className="space-y-4">
       {[1, 2, 3].map((i) => (
         <div key={i} className="flex items-center gap-3">
-          <div className="h-10 w-10 rounded-lg bg-blue-500/30"></div>
+          <div className="h-10 w-10 rounded-lg bg-green-500/30"></div>
           <div className="space-y-2">
-            <div className="h-3 w-32 rounded-full bg-blue-500/30"></div>
-            <div className="h-2 w-24 rounded-full bg-blue-500/20"></div>
+            <div className="h-3 w-32 rounded-full bg-green-500/30"></div>
+            <div className="h-2 w-24 rounded-full bg-green-500/20"></div>
           </div>
         </div>
       ))}

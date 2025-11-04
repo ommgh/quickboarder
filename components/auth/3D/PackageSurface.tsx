@@ -53,13 +53,13 @@ function AnimatedBox({
   return (
     <mesh ref={meshRef} position={initialPosition}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#a48fff" opacity={0.9} transparent />
+      <meshStandardMaterial color="#15e696" opacity={0.9} transparent />
       <lineSegments>
         <edgesGeometry
           attach="geometry"
           args={[new THREE.BoxGeometry(1, 1, 1)]}
         />
-        <lineBasicMaterial attach="material" color="#a48fff" linewidth={2} />
+        <lineBasicMaterial attach="material" color="#fcfcfc" linewidth={2} />
       </lineSegments>
     </mesh>
   );
@@ -88,8 +88,8 @@ function Scene() {
         renderOrder={-1}
         position={[0, 0, 0]}
         infiniteGrid
-        cellSize={1}
-        cellThickness={0.5}
+        cellSize={3}
+        cellThickness={0.2}
         sectionSize={3}
         sectionThickness={1}
         sectionColor={new THREE.Color(0.5, 0.5, 0.5)}
@@ -104,9 +104,7 @@ function Scene() {
 
 export default function Component() {
   return (
-    <div
-      className={`relative w-full h-screen bg-black text-white overflow-hidden `}
-    >
+    <div className={`relative w-full h-screen overflow-hidden `}>
       <Canvas
         shadows
         camera={{ position: [10, 10, 10], fov: 48 }}

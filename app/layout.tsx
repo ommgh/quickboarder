@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import "@/styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import { auth } from "@/auth";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { StyleGlideProvider } from "@/components/styleglide-provider";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Analytics } from "@vercel/analytics/next";
