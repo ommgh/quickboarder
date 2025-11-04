@@ -7,8 +7,7 @@ import {
   PersonStanding,
   Sparkles,
 } from "lucide-react";
-
-import { DashedLine } from "@/components/dashed-line";
+import { LineWithCaps } from "@/components/caps-line";
 import { Button } from "@/components/ui/button";
 
 const features = [
@@ -73,11 +72,11 @@ export const Hero = () => {
 
         {/* Right side - Features */}
         <div className="relative flex flex-1 flex-col justify-center space-y-5 max-lg:pt-10 lg:pl-10">
-          <DashedLine
+          <LineWithCaps
             orientation="vertical"
             className="absolute top-0 left-0 max-lg:hidden"
           />
-          <DashedLine
+          <LineWithCaps
             orientation="horizontal"
             className="absolute top-0 lg:hidden"
           />

@@ -23,3 +23,15 @@ export const getUserById = async (id: string) => {
     return null;
   }
 };
+
+export const getUserSubscription = async (userId: string) => {
+  try {
+    const subscription = await db.subscription.findUnique({
+      where: { userId },
+    });
+    return subscription?.name;
+  } catch (e) {
+    console.log(e);
+    return 0;
+  }
+};

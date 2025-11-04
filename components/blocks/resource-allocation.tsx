@@ -1,8 +1,7 @@
 import Image from "next/image";
 
-import { DashedLine } from "../dashed-line";
-
 import { cn } from "@/lib/utils";
+import { LineWithCaps } from "../caps-line";
 
 const topItems = [
   {
@@ -124,7 +123,7 @@ export const ResourceAllocation = () => {
         </h2>
 
         <div className="mt-8 md:mt-12 lg:mt-20">
-          <DashedLine
+          <LineWithCaps
             orientation="horizontal"
             className="container scale-x-105"
           />
@@ -135,7 +134,7 @@ export const ResourceAllocation = () => {
               <Item key={i} item={item} isLast={i === topItems.length - 1} />
             ))}
           </div>
-          <DashedLine
+          <LineWithCaps
             orientation="horizontal"
             className="container max-w-7xl scale-x-110"
           />
@@ -152,7 +151,7 @@ export const ResourceAllocation = () => {
             ))}
           </div>
         </div>
-        <DashedLine
+        <LineWithCaps
           orientation="horizontal"
           className="container max-w-7xl scale-x-110"
         />
@@ -242,11 +241,11 @@ const Item = ({ item, isLast, className }: ItemProps) => {
 
       {!isLast && (
         <>
-          <DashedLine
+          <LineWithCaps
             orientation="vertical"
             className="absolute top-0 right-0 max-md:hidden"
           />
-          <DashedLine
+          <LineWithCaps
             orientation="horizontal"
             className="absolute inset-x-0 bottom-0 md:hidden"
           />

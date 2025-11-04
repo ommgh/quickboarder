@@ -6,6 +6,8 @@ import { ChevronRight } from "lucide-react";
 import { DashedLine } from "../dashed-line";
 
 import { Card, CardContent } from "@/components/ui/card";
+import { LineWithCaps } from "../caps-line";
+import { CorneredBorder } from "../corner-border";
 
 const items = [
   {
@@ -28,10 +30,10 @@ export const Features = () => {
       <div className="container">
         {/* Top dashed line with text */}
         <div className="relative flex items-center justify-center">
-          <DashedLine className="text-muted-foreground" />
-          {/*<span className="bg-muted text-muted-foreground absolute px-3 font-mono text-sm font-medium tracking-wide max-md:hidden">
+          <LineWithCaps className="text-muted-foreground" />
+          <span className="bg-muted text-muted-foreground absolute px-3 font-mono text-sm font-medium tracking-wide max-md:hidden">
             MEASURE TWICE. CUT ONCE.
-          </span>*/}
+          </span>
         </div>
 
         {/* Content */}
@@ -47,49 +49,51 @@ export const Features = () => {
         </div>
 
         {/* Features Card */}
-        <Card className="mt-8 rounded-3xl md:mt-12 lg:mt-20">
-          <CardContent className="flex p-0 max-md:flex-col">
-            {items.map((item, i) => (
-              <div key={i} className="flex flex-1 max-md:flex-col">
-                <div className="flex-1 p-4 pe-0! md:p-6">
-                  <div className="relative aspect-[1.28/1] overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={`${item.title} interface`}
-                      fill
-                      className="object-cover object-left-top ps-4 pt-2"
-                    />
-                    <div className="from-background absolute inset-0 z-10 bg-linear-to-t via-transparent to-transparent" />
-                  </div>
-
-                  <Link
-                    href="#"
-                    className={
-                      "group flex items-center justify-between gap-4 pe-4 pt-4 md:pe-6 md:pt-6"
-                    }
-                  >
-                    <h3 className="font-display max-w-60 text-2xl leading-tight font-bold tracking-tight">
-                      {item.title}
-                    </h3>
-                    <div className="rounded-full border p-2">
-                      <ChevronRight className="size-6 transition-transform group-hover:translate-x-1 lg:size-9" />
+        <CorneredBorder>
+          <Card className="mt-8 rounded-3xl md:mt-12 lg:mt-20">
+            <CardContent className="flex p-0 max-md:flex-col">
+              {items.map((item, i) => (
+                <div key={i} className="flex flex-1 max-md:flex-col">
+                  <div className="flex-1 p-4 pe-0! md:p-6">
+                    <div className="relative aspect-[1.28/1] overflow-hidden">
+                      <Image
+                        src={item.image}
+                        alt={`${item.title} interface`}
+                        fill
+                        className="object-cover object-left-top ps-4 pt-2"
+                      />
+                      <div className="from-background absolute inset-0 z-10 bg-linear-to-t via-transparent to-transparent" />
                     </div>
-                  </Link>
+
+                    <Link
+                      href="#"
+                      className={
+                        "group flex items-center justify-between gap-4 pe-4 pt-4 md:pe-6 md:pt-6"
+                      }
+                    >
+                      <h3 className="font-display max-w-60 text-2xl leading-tight font-bold tracking-tight">
+                        {item.title}
+                      </h3>
+                      <div className="rounded-full border p-2">
+                        <ChevronRight className="size-6 transition-transform group-hover:translate-x-1 lg:size-9" />
+                      </div>
+                    </Link>
+                  </div>
+                  {i < items.length - 1 && (
+                    <div className="relative hidden md:block">
+                      <LineWithCaps orientation="vertical" />
+                    </div>
+                  )}
+                  {i < items.length - 1 && (
+                    <div className="relative block md:hidden">
+                      <LineWithCaps orientation="horizontal" />
+                    </div>
+                  )}
                 </div>
-                {i < items.length - 1 && (
-                  <div className="relative hidden md:block">
-                    <DashedLine orientation="vertical" />
-                  </div>
-                )}
-                {i < items.length - 1 && (
-                  <div className="relative block md:hidden">
-                    <DashedLine orientation="horizontal" />
-                  </div>
-                )}
-              </div>
-            ))}
-          </CardContent>
-        </Card>
+              ))}
+            </CardContent>
+          </Card>
+        </CorneredBorder>
       </div>
     </section>
   );
