@@ -1,4 +1,4 @@
-// /api/product/route.ts
+// /api/products/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
@@ -57,7 +57,6 @@ export async function POST(req: NextRequest) {
     );
   } catch (error) {
     console.error("Product creation error:", error);
-
     if (error instanceof z.ZodError) {
       return NextResponse.json(
         {
@@ -68,7 +67,6 @@ export async function POST(req: NextRequest) {
         { status: 400 },
       );
     }
-
     return NextResponse.json(
       {
         success: false,
@@ -122,7 +120,7 @@ export async function GET(req: NextRequest) {
       price: product.price ? Number(product.price) : undefined,
     }));
 
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         products: serializedProducts,
@@ -135,9 +133,17 @@ export async function GET(req: NextRequest) {
       },
       { status: 200 },
     );
+
+    // Add cache control headers
+    // Cache for 5 minutes, but allow stale content while revalidating
+    response.headers.set(
+      "Cache-Control",
+      "private, max-age=300, stale-while-revalidate=60",
+    );
+
+    return response;
   } catch (error) {
     console.error("Products fetch error:", error);
-
     return NextResponse.json(
       {
         success: false,

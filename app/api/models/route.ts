@@ -6,7 +6,7 @@ import { auth } from "@/auth";
 const prisma = new PrismaClient();
 
 const createModelSchema = z.object({
-  name: z.string().min(1, "Product name is required").max(255),
+  name: z.string().min(1, "Model name is required").max(255),
   ImageUrl: z.string().url("Valid image URL is required"),
 });
 
@@ -63,11 +63,15 @@ export async function GET(request: NextRequest) {
         userId: session.user.id,
       },
     });
-
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       models,
     });
+    response.headers.set(
+      "Cache-Control",
+      "private, max-age=300, stale-while-revalidate=60",
+    );
+    return response;
   } catch (error) {
     console.error("Models retrieval error:", error);
     return NextResponse.json(
