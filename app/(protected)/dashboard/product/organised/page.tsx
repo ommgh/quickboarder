@@ -18,6 +18,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { toast } from "@/components/ui/use-toast";
 import { ArrowLeft, Loader2, AlertCircle, Check, Edit } from "lucide-react";
 import { UploadSection } from "@/components/product/UploadSection";
+import { useSaveProduct } from "@/hooks/use-save-product";
 
 type WorkflowStep = "upload" | "scraping" | "completed" | "error";
 
@@ -65,6 +66,8 @@ export default function ProductPage() {
     }
   };
 
+  const { state: saveState, saveProduct, reset: resetSave } = useSaveProduct();
+
   const handleSaveProduct = async () => {
     if (!productImage) {
       toast({
@@ -75,25 +78,25 @@ export default function ProductPage() {
       return;
     }
 
-    try {
-      await fetch("/api/products", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: productName,
-          description,
-          category,
-          price: price ? parseFloat(price) : undefined,
-          ImageUrl: productImage,
-        }),
-      });
+    const productData = {
+      name: productName,
+      description: description,
+      category: category,
+      price: price ? parseFloat(price) : undefined,
+    };
+
+    const base64Data = productImage.replace(/^data:image\/[a-z]+;base64,/, "");
+    const result = await saveProduct(productData, base64Data);
+
+    if (result.success) {
       toast({
         title: "Product saved successfully!",
         description: "The product has been added to your catalog.",
       });
-    } catch {
+    } else {
       toast({
         title: "Failed to save product",
+        description: saveState.error || "Please try again.",
         variant: "destructive",
       });
     }
@@ -130,7 +133,6 @@ export default function ProductPage() {
                 const detectedBarcode = result.getText();
                 console.log("Barcode:", detectedBarcode);
 
-                // ✅ Call your handler
                 handleBarcodeDetected(detectedBarcode);
               } catch {
                 console.error("No barcode found");
@@ -208,7 +210,22 @@ export default function ProductPage() {
               <Button variant="outline" onClick={handleStartOver}>
                 Start Over
               </Button>
-              <Button onClick={handleSaveProduct}>Save</Button>
+              <Button
+                onClick={handleSaveProduct}
+                disabled={saveState.isUploading || saveState.isSaving}
+              >
+                {saveState.isUploading && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {saveState.isSaving && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
+                {saveState.isUploading
+                  ? `Uploading... ${Math.round(saveState.uploadProgress)}%`
+                  : saveState.isSaving
+                    ? "Saving..."
+                    : "Save to Catalog"}
+              </Button>
             </CardFooter>
           </Card>
 

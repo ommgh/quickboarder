@@ -1,9 +1,8 @@
-"use client";
 import { FileUpload } from "./FileUpload";
+import { CameraCapture } from "./CameraCapture";
 import type { UploadResult } from "@/types";
 import { BentoGrid } from "../ui/bento";
 import { MobileMockup } from "./MobileMockup";
-import { IconCamera } from "@tabler/icons-react";
 
 type Props = {
   onUpload: (result: UploadResult) => void;
@@ -16,9 +15,7 @@ export function UploadSection({ onUpload }: Props) {
       <div className="flex items-center relative justify-center border border-muted-foreground/25 transition-colors hover:border-muted-foreground/50 md:row-span-2 overflow-hidden p-5">
         <MobileMockup className="size-full" />
       </div>
-      <div className="flex items-center justify-center border border-muted-foreground/25 transition-colors hover:border-muted-foreground/50">
-        <IconCamera className="h-8 w-8" />
-      </div>
+      <CameraCapture onUpload={onUpload} className="border" />
     </BentoGrid>
   );
 }
