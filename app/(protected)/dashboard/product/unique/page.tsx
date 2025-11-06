@@ -194,7 +194,7 @@ export default function ProductEditPage() {
     <div className="container mx-auto p-4 md:p-8">
       <div className="mb-6 flex items-center">
         <Button variant="outline" size="sm" asChild className="mr-4">
-          <Link href="/dashboard">
+          <Link href="/dashboard/product">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>

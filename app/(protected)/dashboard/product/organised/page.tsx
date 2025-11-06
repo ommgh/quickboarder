@@ -110,7 +110,7 @@ export default function ProductPage() {
       {/* Back Button */}
       <div className="mb-6 flex items-center">
         <Button variant="outline" size="sm" asChild className="mr-4">
-          <Link href="/dashboard">
+          <Link href="/dashboard/product">
             <ArrowLeft className="h-4 w-4" />
           </Link>
         </Button>
