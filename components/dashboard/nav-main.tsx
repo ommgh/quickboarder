@@ -32,7 +32,7 @@ export function NavMain({
               asChild
             >
               <Link href={item.url} prefetch>
-                {item.icon && <item.icon size={"18"} />}
+                <item.icon size={"16"} />
                 <span className="truncate">{item.title}</span>
               </Link>
             </SidebarMenuButton>

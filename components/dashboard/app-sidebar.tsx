@@ -9,11 +9,8 @@ import {
   SidebarContent,
   SidebarFooter,
   SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import Image from "next/image";
+
 import {
   IconBox,
   IconBrandGoogleAnalytics,
@@ -23,7 +20,7 @@ import {
   IconSettings,
 } from "@tabler/icons-react";
 
-import Link from "next/link";
+import { StoreSwitcher } from "./store-switcher";
 
 const data = {
   navMain: [
@@ -65,27 +62,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
-              <Link href="/" prefetch>
-                <div className="flex items-center justify-center">
-                  <Image
-                    src="/LOGO.svg"
-                    alt="Q"
-                    height={38}
-                    width={38}
-                    className="dark:invert"
-                  />
-                </div>
-                <span className="font-bold text-xl group-[collapse]:hidden">
-                  QUICKBOARDER
-                </span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <StoreSwitcher />
       </SidebarHeader>
+
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>

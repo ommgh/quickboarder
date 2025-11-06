@@ -1,4 +1,10 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react";
+import {
+  IconBox,
+  IconLink,
+  IconMan,
+  IconTrendingDown,
+  IconTrendingUp,
+} from "@tabler/icons-react";
 import { getTotalModels, getTotalProducts } from "@/data/store";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -10,24 +16,24 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { auth } from "@/auth";
+import { getModelLimt, getProductLimt } from "@/data/subscription";
 
 export async function SectionCards() {
   const session = await auth();
   const totalProducts = await getTotalProducts(session?.user.id!);
   const totalModels = await getTotalModels(session?.user.id!);
+  const productLimit = await getProductLimt(session?.user.id!);
+  const modelLimit = await getModelLimt(session?.user.id!);
   return (
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Products</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {totalProducts} / 100
+            {totalProducts} / {productLimit}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
+            <IconBox size={16} />
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -43,13 +49,10 @@ export async function SectionCards() {
         <CardHeader>
           <CardDescription>Total Models</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {totalModels} / 10
+            {totalModels} / {modelLimit}
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
-              -20%
-            </Badge>
+            <IconMan size={16} />
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -63,15 +66,12 @@ export async function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Connected Channels</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+            0 / 1
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +12.5%
-            </Badge>
+            <IconLink size={16} />
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
