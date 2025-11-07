@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import { Check } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -15,14 +13,13 @@ const plans = [
   {
     name: "Free",
     monthlyPrice: "$0",
-    yearlyPrice: "$0",
     description: "Free for everyone",
     features: ["1 Store", "10 Products Catalog", "2 Default Models"],
   },
   {
     name: "Pro",
     monthlyPrice: "$10",
-    yearlyPrice: "$99",
+
     features: [
       "Upto 5 Stores",
       "Upto 100 Products Catalog",
@@ -35,7 +32,7 @@ const plans = [
   {
     name: "Enterprise",
     monthlyPrice: "$99",
-    yearlyPrice: "$499",
+
     features: [
       "Upto 25 Stores",
       "Upto 1000 Products Catalog",
@@ -70,7 +67,6 @@ const handlePayment = async (productId?: string) => {
 };
 
 export const Pricing = ({ className }: { className?: string }) => {
-  const [isAnnual, setIsAnnual] = useState(false);
   return (
     <section className={cn("py-28 lg:py-32", className)}>
       <div className="container max-w-5xl">
@@ -102,32 +98,17 @@ export const Pricing = ({ className }: { className?: string }) => {
                     </h3>
                     <div className="space-y-1">
                       <div className="text-muted-foreground text-lg font-medium">
-                        {isAnnual ? plan.yearlyPrice : plan.monthlyPrice}{" "}
+                        {plan.monthlyPrice}
                         {plan.name !== "Free" && (
-                          <span className="text-muted-foreground">
-                            {isAnnual ? "year" : "month"}
-                          </span>
+                          <span className="text-muted-foreground">/ month</span>
                         )}
                       </div>
                     </div>
                   </div>
 
-                  {plan.name !== "Free" ? (
-                    <div className="flex items-center gap-2">
-                      <Switch
-                        checked={isAnnual}
-                        onCheckedChange={() => setIsAnnual(!isAnnual)}
-                        aria-label="Toggle annual billing"
-                      />
-                      <span className="text-sm font-medium">
-                        Billed annually
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="text-muted-foreground text-sm">
-                      {plan.description}
-                    </span>
-                  )}
+                  <span className="text-muted-foreground text-sm">
+                    {plan.description}
+                  </span>
 
                   <div className="space-y-3">
                     {plan.features.map((feature) => (

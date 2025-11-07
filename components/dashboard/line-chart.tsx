@@ -39,7 +39,7 @@ export function PingingDotChart() {
     <Card>
       <CardHeader>
         <CardTitle>
-          Pinging Dot Chart
+          Traffic Trends
           <Badge
             variant="outline"
             className="text-green-500 bg-green-500/10 border-none ml-2"

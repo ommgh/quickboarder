@@ -1,85 +1,44 @@
-import React, { ReactNode } from "react";
+import React from "react";
 
-interface CorneredBorderProps {
-  children: ReactNode;
-  cornerSize?: number;
-  cornerThickness?: number;
+interface CorneredBoxProps {
+  children: React.ReactNode;
+  className?: string;
+  cornerSize?: string;
   cornerColor?: string;
   borderColor?: string;
-  borderWidth?: number;
-  rounded?: boolean;
-  className?: string;
+  rounded?: string;
 }
 
-export const CorneredBorder: React.FC<CorneredBorderProps> = ({
+export default function CorneredBox({
   children,
-  cornerSize = 32,
-  cornerThickness = 4,
-  cornerColor = "black",
-  borderColor = "rgb(209 213 219)", // gray-300
-  borderWidth = 1,
-  rounded = true,
   className = "",
-}) => {
-  const cornerSizeClass = `w-[${cornerSize}px] h-[${cornerSize}px]`;
-  const cornerBorderClass = `border-[${cornerThickness}px]`;
-
+  cornerSize = "w-2 h-2",
+  cornerColor = "border-gray-400",
+  borderColor = "border-gray-200 dark:border-gray-700",
+}: CorneredBoxProps) {
   return (
     <div className={`relative ${className}`}>
-      {/* Faded rectangle border */}
       <div
-        className={`absolute inset-0 pointer-events-none ${rounded ? "rounded-xl" : ""}`}
-        style={{
-          border: `${borderWidth}px solid ${borderColor}`,
-        }}
+        className={`absolute inset-0 border ${borderColor} pointer-events-none`}
       ></div>
 
-      {/* Top-left corner */}
       <div
-        className="absolute top-0 left-0"
-        style={{
-          width: `${cornerSize}px`,
-          height: `${cornerSize}px`,
-          borderTop: `${cornerThickness}px solid ${cornerColor}`,
-          borderLeft: `${cornerThickness}px solid ${cornerColor}`,
-        }}
+        className={`absolute top-0 left-0 ${cornerSize} border-t-2 border-l-2 ${cornerColor}`}
       ></div>
 
-      {/* Top-right corner */}
       <div
-        className="absolute top-0 right-0"
-        style={{
-          width: `${cornerSize}px`,
-          height: `${cornerSize}px`,
-          borderTop: `${cornerThickness}px solid ${cornerColor}`,
-          borderRight: `${cornerThickness}px solid ${cornerColor}`,
-        }}
+        className={`absolute top-0 right-0 ${cornerSize} border-t-2 border-r-2 ${cornerColor}`}
       ></div>
 
-      {/* Bottom-left corner */}
       <div
-        className="absolute bottom-0 left-0"
-        style={{
-          width: `${cornerSize}px`,
-          height: `${cornerSize}px`,
-          borderBottom: `${cornerThickness}px solid ${cornerColor}`,
-          borderLeft: `${cornerThickness}px solid ${cornerColor}`,
-        }}
+        className={`absolute bottom-0 left-0 ${cornerSize} border-b-2 border-l-2 ${cornerColor}`}
       ></div>
 
-      {/* Bottom-right corner */}
       <div
-        className="absolute bottom-0 right-0"
-        style={{
-          width: `${cornerSize}px`,
-          height: `${cornerSize}px`,
-          borderBottom: `${cornerThickness}px solid ${cornerColor}`,
-          borderRight: `${cornerThickness}px solid ${cornerColor}`,
-        }}
+        className={`absolute bottom-0 right-0 ${cornerSize} border-b-2 border-r-2 ${cornerColor}`}
       ></div>
 
-      {/* Content */}
-      <div className="relative z-10">{children}</div>
+      <div className="relative z-10 h-full w-full">{children}</div>
     </div>
   );
-};
+}

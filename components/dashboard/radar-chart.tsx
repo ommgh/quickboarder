@@ -38,7 +38,7 @@ export function GlowingStrokeRadarChart() {
     <Card>
       <CardHeader className="items-center pb-4">
         <CardTitle>
-          Radar Chart
+          Product Category Performance
           <Badge
             variant="outline"
             className="text-green-500 bg-green-500/10 border-none ml-2"

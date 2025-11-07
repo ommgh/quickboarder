@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     siteName: "Quickboarder",
     images: [
       {
-        url: "/og-image.jpg",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "Quickboarder - Get your products e-commerce ready",
@@ -80,7 +80,7 @@ export const metadata: Metadata = {
     title: "Quickboarder - Get your products e-commerce ready",
     description:
       "Quickboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
-    images: ["/og-image.jpg"],
+    images: ["/og-image.png"],
     creator: "@ommshx",
   },
 };

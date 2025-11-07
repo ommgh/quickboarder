@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { cn } from "@/lib/utils";
-import { LineWithCaps } from "../caps-line";
+import { DashedLine } from "../dashed-line";
 
 const topItems = [
   {
@@ -10,7 +10,7 @@ const topItems = [
       "Transform multiple category products with advanced management tools",
     images: [
       {
-        src: "/resource-allocation/templates.webp",
+        src: "/resource-allocation/categories.png",
         alt: "Issue template interface",
         width: 495,
         height: 186,
@@ -67,7 +67,7 @@ const bottomItems = [
       "Track your product performance with real-time analytics and insights.",
     images: [
       {
-        src: "/resource-allocation/graveyard.webp",
+        src: "/resource-allocation/analytics.png",
         alt: "Graveyard interface",
         width: 305,
         height: 280,
@@ -83,7 +83,7 @@ const bottomItems = [
       "Enhance customer experience with AI-powered virtual try-on features",
     images: [
       {
-        src: "/resource-allocation/discussions.webp",
+        src: "/resource-allocation/tryon.png",
         alt: "Task discussions interface",
         width: 320,
         height: 103,
@@ -96,7 +96,7 @@ const bottomItems = [
   {
     title: "Notifications.",
     description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit sed do eiusmod.",
+      "Stay informed with real-time notifications on product updates and sales.",
     images: [
       {
         src: "/resource-allocation/notifications.webp",
@@ -123,7 +123,7 @@ export const ResourceAllocation = () => {
         </h2>
 
         <div className="mt-8 md:mt-12 lg:mt-20">
-          <LineWithCaps
+          <DashedLine
             orientation="horizontal"
             className="container scale-x-105"
           />
@@ -134,7 +134,7 @@ export const ResourceAllocation = () => {
               <Item key={i} item={item} isLast={i === topItems.length - 1} />
             ))}
           </div>
-          <LineWithCaps
+          <DashedLine
             orientation="horizontal"
             className="container max-w-7xl scale-x-110"
           />
@@ -151,7 +151,7 @@ export const ResourceAllocation = () => {
             ))}
           </div>
         </div>
-        <LineWithCaps
+        <DashedLine
           orientation="horizontal"
           className="container max-w-7xl scale-x-110"
         />
@@ -241,11 +241,11 @@ const Item = ({ item, isLast, className }: ItemProps) => {
 
       {!isLast && (
         <>
-          <LineWithCaps
+          <DashedLine
             orientation="vertical"
             className="absolute top-0 right-0 max-md:hidden"
           />
-          <LineWithCaps
+          <DashedLine
             orientation="horizontal"
             className="absolute inset-x-0 bottom-0 md:hidden"
           />

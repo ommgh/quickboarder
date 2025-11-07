@@ -64,7 +64,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarHeader>
         <StoreSwitcher />
       </SidebarHeader>
-
       <SidebarContent>
         <NavMain items={data.navMain} />
       </SidebarContent>

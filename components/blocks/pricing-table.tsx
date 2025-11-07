@@ -25,21 +25,21 @@ const pricingPlans = [
   {
     name: "Free",
     button: {
-      text: "Get started",
+      text: "Get Started",
       variant: "outline" as const,
     },
   },
   {
     name: "Startup",
     button: {
-      text: "Get started",
+      text: "Get Started",
       variant: "outline" as const,
     },
   },
   {
     name: "Enterprise",
     button: {
-      text: "Get a demo",
+      text: "Get Started",
       variant: "outline" as const,
     },
   },
@@ -50,22 +50,22 @@ const comparisonFeatures: FeatureSection[] = [
     category: "Usage",
     features: [
       {
-        name: "Members",
-        free: "Unlimited",
-        startup: "Unlimited",
-        enterprise: "Unlimited",
+        name: "Stores",
+        free: "1 Store",
+        startup: "Up to 5 Stores",
+        enterprise: "Up to 25 Stores",
       },
       {
-        name: "Transactions",
-        free: "250",
-        startup: "Unlimited",
-        enterprise: "Unlimited",
+        name: "Product Catalog",
+        free: "10 Products",
+        startup: "Up to 100 Products",
+        enterprise: "Up to 1000 Products",
       },
       {
-        name: "Teams",
-        free: "2",
-        startup: "Unlimited",
-        enterprise: "Unlimited",
+        name: "Custom Models",
+        free: "2 Default Models",
+        startup: "5 Custom Models",
+        enterprise: "50 Custom Models",
       },
     ],
   },
@@ -73,20 +73,14 @@ const comparisonFeatures: FeatureSection[] = [
     category: "Features",
     features: [
       {
-        name: "Reporting",
-        free: true,
+        name: "Analytics Dashboard",
+        free: null,
         startup: true,
         enterprise: true,
       },
       {
-        name: "Analytics",
-        free: true,
-        startup: true,
-        enterprise: true,
-      },
-      {
-        name: "Import and export",
-        free: true,
+        name: "Custom Branding",
+        free: null,
         startup: true,
         enterprise: true,
       },
@@ -96,43 +90,25 @@ const comparisonFeatures: FeatureSection[] = [
         startup: true,
         enterprise: true,
       },
-      {
-        name: "Mainline AI",
-        free: null,
-        startup: true,
-        enterprise: true,
-      },
-      {
-        name: "Admin roles",
-        free: null,
-        startup: null,
-        enterprise: true,
-      },
-      {
-        name: "Audit log",
-        free: null,
-        startup: null,
-        enterprise: true,
-      },
     ],
   },
   {
     category: "Support",
     features: [
       {
-        name: "Priority Support",
+        name: "Standard Support",
         free: true,
         startup: true,
         enterprise: true,
       },
       {
-        name: "Account Manager",
+        name: "Priority Support",
         free: null,
         startup: null,
         enterprise: true,
       },
       {
-        name: "Uptime SLA",
+        name: "Dedicated Account Manager",
         free: null,
         startup: null,
         enterprise: true,

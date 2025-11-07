@@ -2,7 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { getUserSubscription } from "@/data/user";
-import { ChartAreaInteractive } from "@/components/dashboard/chart-area-interactive";
+
 import Link from "next/link";
 import { HighlightedBarChart } from "@/components/ui/highlighted-bar-chart";
 import { GlowingStrokeRadarChart } from "@/components/dashboard/radar-chart";

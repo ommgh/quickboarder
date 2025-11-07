@@ -12,7 +12,7 @@ export const LineWithCaps: React.FC<LineWithCapsProps> = ({
   orientation = "horizontal",
   thickness = 2,
   capLength = 12,
-  color = "currentColor",
+  color = "#0d140d",
   className = "",
 }) => {
   const isHorizontal = orientation === "horizontal";
