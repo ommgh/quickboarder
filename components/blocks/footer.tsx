@@ -74,7 +74,7 @@ export function Footer() {
         </ul>
       </nav>
 
-      <div className="text-primary mt-10 w-full md:mt-14 lg:mt-20">
+      {/*<div className="text-primary mt-10 w-full md:mt-14 lg:mt-20">
         <svg
           width="100%"
           height="250"
@@ -110,7 +110,7 @@ export function Footer() {
             QUICKBOARDER
           </text>
         </svg>
-      </div>
+      </div>*/}
     </footer>
   );
 }
