@@ -1,12 +1,13 @@
 import {
   IconBox,
+  IconCategory,
   IconLink,
   IconMan,
   IconTrendingDown,
   IconTrendingUp,
 } from "@tabler/icons-react";
 import { getTotalModels, getTotalProducts } from "@/data/store";
-import { Badge } from "@/components/ui/badge";
+
 import {
   Card,
   CardAction,
@@ -83,15 +84,12 @@ export async function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>Product Categories</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
+            5
           </CardTitle>
           <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
-              +4.5%
-            </Badge>
+            <IconCategory size={16} />
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">

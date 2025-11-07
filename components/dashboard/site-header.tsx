@@ -24,7 +24,7 @@ export function SiteHeader() {
   const avatar = session.data?.user.image || "";
   const email = session.data?.user.email || "";
   return (
-    <header className="sticky top-0 z-10 bg-background flex h-16 shrink-0 items-center p-4 md:p-8">
+    <header className="sticky top-0 z-10 border-b bg-background flex h-16 shrink-0 items-center p-4 md:p-8">
       <SidebarTrigger className="md:hidden" />
 
       <div className="flex-1 flex items-center justify-end gap-2">
