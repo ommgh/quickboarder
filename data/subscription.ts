@@ -23,3 +23,15 @@ export const getModelLimt = async (userId: string) => {
     return 0;
   }
 };
+
+export const getNextBillingDate = async (userId: string) => {
+  try {
+    const subscription = await db.subscription.findUnique({
+      where: { userId },
+    });
+    return subscription?.nextBillingDate;
+  } catch (e) {
+    console.log(e);
+    return 0;
+  }
+};

@@ -1,56 +1,28 @@
 import { auth, signOut } from "@/auth";
-import {
-  LogOut,
-  ShoppingBag,
-  User,
-  Settings,
-  Moon,
-  Shield,
-  Trash,
-} from "lucide-react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { LogOut, ShoppingBag, Shield, Trash, CreditCard } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { getUserSubscription } from "@/data/user";
+import { getNextBillingDate } from "@/data/subscription";
+import Link from "next/link";
 
 export default async function SettingsPage() {
   const session = await auth();
   const user = session?.user;
+  const plan = getUserSubscription(user?.id!);
+  const nextBillingDate = getNextBillingDate(user?.id!);
 
   return (
-    <div className="min-h-screen p-4 sm:p-8">
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div className="flex items-center justify-between">
-          <h1 className="text-3xl font-bold">Settings</h1>
-          <form
-            action={async () => {
-              "use server";
-              await signOut({ redirectTo: "/auth/login" });
-            }}
-          >
-            <Button variant="destructive" type="submit">
-              <LogOut className="mr-2 h-4 w-4" />
-              Logout
-            </Button>
-          </form>
+    <div className="container mx-auto p-4 md:p-8 min-h-screen overflow-x-hidden">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
+          <h1 className="text-2xl md:text-3xl font-bold">Settings</h1>
         </div>
 
-        {/* Profile Settings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <User className="mr-2 h-5 w-5" /> Profile
-            </CardTitle>
-            <CardDescription>Manage your personal information</CardDescription>
-          </CardHeader>
+        <Card className="flex flex-row justify-between px-2">
           <CardContent className="flex items-center space-x-4">
-            <Avatar className="h-16 w-16">
+            <Avatar className="h-14 w-14">
               <AvatarImage
                 src={user?.image ?? undefined}
                 alt={user?.name ?? ""}
@@ -63,76 +35,77 @@ export default async function SettingsPage() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <p className="font-medium text-lg">{user?.name}</p>
-              <p className="text-muted-foreground">{user?.email}</p>
+              <p className="font-medium">{user?.name}</p>
+              <p className="text-sm text-muted-foreground">{user?.email}</p>
             </div>
           </CardContent>
-          <CardFooter>
-            <Button variant="outline">Edit Profile</Button>
-          </CardFooter>
+          <form
+            action={async () => {
+              "use server";
+              await signOut({ redirectTo: "/auth/login" });
+            }}
+          >
+            <Button variant="ghost" type="submit" className="mt-2.5">
+              <LogOut className="h-4 w-4" />
+            </Button>
+          </form>
         </Card>
 
-        {/* E-commerce Integrations */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <ShoppingBag className="mr-2 h-5 w-5" /> E-commerce Integrations
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="flex items-center text-lg">
+              <CreditCard className="mr-2 h-5 w-5" /> Billing
             </CardTitle>
-            <CardDescription>
-              Connect your stores to export catalogs directly
-            </CardDescription>
+            <Link
+              href={(await plan) === "FREE" ? "/pricing" : "/dashboard/billing"}
+            >
+              <Button variant="outline" size="sm">
+                {(await plan) === "FREE" ? "Upgrade" : "Manage"}
+              </Button>
+            </Link>
           </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex justify-between items-center">
-              <span>Shopify</span>
-              <Button size="sm">Connect</Button>
-            </div>
-            <div className="flex justify-between items-center">
-              <span>Flipkart</span>
-              <Button size="sm">Connect</Button>
-            </div>
-            <div className="flex justify-between items-center">
-              <span>Amazon</span>
-              <Button size="sm">Connect</Button>
+          <CardContent>
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+              <p className="text-sm text-muted-foreground">
+                Current Plan:{" "}
+                <span className="font-medium text-foreground">{plan}</span>
+              </p>
+              {(await plan) !== "FREE" && (
+                <p className="text-sm text-muted-foreground">
+                  Next Payment:{" "}
+                  <span className="font-medium">{nextBillingDate}</span>
+                </p>
+              )}
             </div>
           </CardContent>
         </Card>
 
-        {/* Preferences */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              <Settings className="mr-2 h-5 w-5" /> Preferences
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="flex items-center text-lg">
+              <ShoppingBag className="mr-2 h-5 w-5" /> Channels
             </CardTitle>
-            <CardDescription>
-              Customize your QuickBoarder experience
-            </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            <div className="flex items-center justify-between">
-              <span>Dark Mode</span>
-              <Button size="sm" variant="outline">
-                <Moon className="mr-2 h-4 w-4" /> Toggle
-              </Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span>Notifications</span>
-              <Button size="sm" variant="outline">
-                Manage
-              </Button>
-            </div>
+            {["Shopify", "Flipkart", "Amazon"].map((platform) => (
+              <div
+                key={platform}
+                className="flex items-center justify-between rounded-md border p-3 overflow-x-hidden"
+              >
+                <span>{platform}</span>
+                <Button size="sm">Connect</Button>
+              </div>
+            ))}
           </CardContent>
         </Card>
 
-        {/* Security */}
         <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
+            <CardTitle className="flex items-center text-lg">
               <Shield className="mr-2 h-5 w-5" /> Security
             </CardTitle>
-            <CardDescription>Protect your account</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent>
             <div className="flex items-center justify-between">
               <span>Two-factor authentication</span>
               <Button size="sm" variant="outline">
@@ -142,16 +115,16 @@ export default async function SettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Danger Zone */}
-        <Card className="border-destructive">
-          <CardHeader>
-            <CardTitle className="flex items-center text-destructive">
+        <Card className="border-destructive/50">
+          <CardHeader className="pb-2">
+            <CardTitle className="flex items-center text-destructive text-lg">
               <Trash className="mr-2 h-5 w-5" /> Danger Zone
             </CardTitle>
-            <CardDescription>Actions that cannot be undone</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button variant="destructive">Delete Account</Button>
+            <Button variant="destructive" size="sm">
+              Delete Account
+            </Button>
           </CardContent>
         </Card>
       </div>
