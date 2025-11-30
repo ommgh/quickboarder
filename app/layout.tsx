@@ -100,6 +100,10 @@ export default async function RootLayout({
             crossOrigin="anonymous"
             src="https://tweakcn.com/live-preview.min.js"
           />
+          <script
+            src="https://cdn.visitors.now/v.js"
+            data-token="4a467a0f-2672-44bf-8ed5-513fa1bfc85b"
+          ></script>
         </head>
         <body className={`${dmSans.variable} ${inter.variable} antialiased`}>
           <ThemeProvider
