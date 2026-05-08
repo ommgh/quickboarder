@@ -1,17 +1,23 @@
-import { auth, signOut } from "@/auth";
-import { LogOut, ShoppingBag, Shield, Trash, CreditCard } from "lucide-react";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { getUserSubscription } from "@/data/user";
-import { getNextBillingDate } from "@/data/subscription";
 import Link from "next/link";
+import { CreditCard, LogOut, Shield, ShoppingBag, Trash } from "lucide-react";
+import { auth, signOut } from "@/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { MarketplaceConnection } from "@/components/dashboard/marketplace-connection";
+import { getNextBillingDate } from "@/data/subscription";
+import { getUserSubscription } from "@/data/user";
 
 export default async function SettingsPage() {
   const session = await auth();
   const user = session?.user;
-  const plan = getUserSubscription(user?.id!);
-  const nextBillingDate = getNextBillingDate(user?.id!);
+
+  if (!user?.id) {
+    return null;
+  }
+
+  const plan = getUserSubscription(user.id);
+  const nextBillingDate = getNextBillingDate(user.id);
 
   return (
     <div className="container mx-auto p-4 md:p-8 min-h-screen overflow-x-hidden">
@@ -87,15 +93,12 @@ export default async function SettingsPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            {["Shopify", "Flipkart", "Amazon"].map((platform) => (
-              <div
-                key={platform}
-                className="flex items-center justify-between rounded-md border p-3 overflow-x-hidden"
-              >
-                <span>{platform}</span>
-                <Button size="sm">Connect</Button>
-              </div>
-            ))}
+            <MarketplaceConnection provider="amazon" />
+            <MarketplaceConnection provider="flipkart" />
+            <div className="flex items-center justify-between rounded-md border p-3 overflow-x-hidden">
+              <span>Shopify</span>
+              <Button size="sm">Connect</Button>
+            </div>
           </CardContent>
         </Card>
 

@@ -94,13 +94,12 @@ const bottomItems = [
     fade: [""],
   },
   {
-    title: "Notifications.",
-    description:
-      "Stay informed with real-time notifications on product updates and sales.",
+    title: "Brand.",
+    description: "Generate you brand identity in minutes that leaves an impact",
     images: [
       {
-        src: "/resource-allocation/notifications.webp",
-        alt: "Notifications interface",
+        src: "/resource-allocation/brand.png",
+        alt: "Brand Generation",
         width: 305,
         height: 280,
       },

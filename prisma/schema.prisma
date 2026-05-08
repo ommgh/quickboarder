@@ -19,18 +19,27 @@ enum Plan {
   ENTERPRISE
 }
 
+enum MarketplaceProvider {
+  AMAZON
+  FLIPKART
+  SHOPIFY
+  EBAY
+  ETSY
+}
+
 model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String         @unique
-  emailVerified DateTime?
-  image         String?
-  password      String?
-  role          UserRole       @default(USER)
-  accounts      Account[]
-  products      Product[]
-  models        Models[]
-  subscriptions Subscription[]
+  id                  String                @id @default(cuid())
+  name                String?
+  email               String                @unique
+  emailVerified       DateTime?
+  image               String?
+  password            String?
+  role                UserRole              @default(USER)
+  accounts            Account[]
+  products            Product[]
+  models              Models[]
+  subscriptions       Subscription[]
+  marketplaceConnections MarketplaceConnection[]
 }
 
 model Account {
@@ -82,16 +91,16 @@ model Subscription {
 }
 
 model Product {
-  id          String   @id @default(cuid())
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  name        String
-  description String
-  category    String
-  price       Decimal? @db.Decimal(10, 2)
-  ImageUrl    String
-  userId      String
-  user        User     @relation(fields: [userId], references: [id])
+  id                  String                @id @default(cuid())
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+  name                String
+  description         String
+  category            String
+  price               Decimal?              @db.Decimal(10, 2)
+  ImageUrl            String
+  userId              String
+  user                User                  @relation(fields: [userId], references: [id])
 }
 
 model Models {
@@ -102,4 +111,38 @@ model Models {
   ImageUrl  String
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model MarketplaceConnection {
+  id                    String              @id @default(cuid())
+  userId                String
+  provider              MarketplaceProvider
+  sellerId              String
+  marketplaceId         String
+  encryptedAccessToken  String              @db.Text
+  encryptedRefreshToken String              @db.Text
+  accessTokenExpiresAt  DateTime
+  refreshTokenExpiresAt DateTime
+  metadata              Json?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, provider])
+  @@index([userId])
+  @@index([provider])
+  @@index([sellerId])
+}
+
+model OAuthState {
+  id            String   @id @default(cuid())
+  state         String   @unique
+  userId        String
+  marketplaceId String
+  expiresAt     DateTime
+  createdAt     DateTime @default(now())
+
+  @@index([state])
+  @@index([expiresAt])
 }

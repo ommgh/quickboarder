@@ -22,6 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
 import { ProductDeleteButton } from "@/components/product/ProductDelete";
 
@@ -67,6 +68,9 @@ export default function CatalogPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedProducts, setSelectedProducts] = useState<Set<string>>(
+    new Set(),
+  );
   const [pagination, setPagination] = useState({
     total: 0,
     limit: 20,
@@ -204,6 +208,11 @@ export default function CatalogPage() {
       }
 
       setProducts(products.filter((p) => p.id !== id));
+      setSelectedProducts((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(id);
+        return newSet;
+      });
       invalidateCache();
 
       setTimeout(() => {
@@ -211,6 +220,26 @@ export default function CatalogPage() {
       }, 500);
     } catch (err) {
       throw err;
+    }
+  };
+
+  const handleSelectProduct = (productId: string, checked: boolean) => {
+    setSelectedProducts((prev) => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(productId);
+      } else {
+        newSet.delete(productId);
+      }
+      return newSet;
+    });
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedProducts(new Set(filteredProducts.map((p) => p.id)));
+    } else {
+      setSelectedProducts(new Set());
     }
   };
 
@@ -311,6 +340,24 @@ export default function CatalogPage() {
         </Card>
       ) : (
         <>
+          {filteredProducts.length > 0 && (
+            <div className="mb-4 flex items-center gap-2">
+              <Checkbox
+                id="select-all"
+                checked={
+                  filteredProducts.length > 0 &&
+                  filteredProducts.every((p) => selectedProducts.has(p.id))
+                }
+                onCheckedChange={handleSelectAll}
+              />
+              <label
+                htmlFor="select-all"
+                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              >
+                Select all products
+              </label>
+            </div>
+          )}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
@@ -318,6 +365,15 @@ export default function CatalogPage() {
                   key={product.id}
                   className="overflow-hidden py-0 flex flex-col"
                 >
+                  <div className="absolute top-2 left-2 z-10">
+                    <Checkbox
+                      checked={selectedProducts.has(product.id)}
+                      onCheckedChange={(checked) =>
+                        handleSelectProduct(product.id, checked as boolean)
+                      }
+                      className="bg-white"
+                    />
+                  </div>
                   <div className="relative overflow-hidden h-[225px]">
                     <Image
                       src={product.ImageUrl || "/placeholder.svg"}
@@ -333,10 +389,12 @@ export default function CatalogPage() {
                       <span className="line-clamp-2">
                         {product.description}
                       </span>
-                      <span className="w-fit bg-muted px-2 py-1 text-xs">
-                        {product.category.charAt(0).toUpperCase() +
-                          product.category.slice(1)}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="w-fit bg-muted px-2 py-1 text-xs">
+                          {product.category.charAt(0).toUpperCase() +
+                            product.category.slice(1)}
+                        </span>
+                      </div>
                     </CardDescription>
                   </CardHeader>
                   <CardContent className="py-4">

@@ -65,18 +65,18 @@ export function SiteHeader() {
               <DropdownMenuGroup>
                 <Link href="/dashboard/settings" prefetch>
                   <DropdownMenuItem>
-                    <IconUserCircle />
+                    <IconUserCircle className="hover:text-white" />
                     Account
                   </DropdownMenuItem>
                 </Link>
                 <DropdownMenuItem>
-                  <IconCreditCard />
+                  <IconCreditCard className="hover:text-white" />
                   Billing
                 </DropdownMenuItem>
               </DropdownMenuGroup>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={() => signOut()}>
-                <IconLogout />
+                <IconLogout className="hover:text-white" />
                 Log out
               </DropdownMenuItem>
             </DropdownMenuContent>

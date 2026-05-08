@@ -18,7 +18,7 @@ const items = [
   },
   {
     title: "AI Appreals Try-On With Models",
-    image: "/features/models.svg",
+    image: "/features/models.png",
   },
 ];
 
