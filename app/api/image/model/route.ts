@@ -5,7 +5,7 @@ import { Buffer } from "buffer"; // needed for base64 conversion in Node runtime
 
 const GEMINI_API_KEY = process.env.GEMINI_MODEL_API_KEY!;
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
-const model = "gemini-2.5-flash-image-preview";
+const model = "gemini-3.1-flash-image-preview";
 
 /** Parse a data: URL (synchronous) */
 const parseDataUrl = (dataUrl: string): { mimeType: string; data: string } => {

@@ -20,18 +20,18 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 const chartData = [
-  { month: "January", desktop: 342 },
-  { month: "February", desktop: 876 },
-  { month: "March", desktop: 512 },
-  { month: "April", desktop: 629 },
-  { month: "May", desktop: 458 },
-  { month: "June", desktop: 781 },
-  { month: "July", desktop: 394 },
-  { month: "August", desktop: 925 },
-  { month: "September", desktop: 647 },
-  { month: "October", desktop: 532 },
-  { month: "November", desktop: 803 },
-  { month: "December", desktop: 271 },
+  { month: "January", units: 0 },
+  { month: "February", units: 0 },
+  { month: "March", units: 0 },
+  { month: "April", units: 0 },
+  { month: "May", units: 0 },
+  { month: "June", units: 0 },
+  { month: "July", units: 0 },
+  { month: "August", units: 0 },
+  { month: "September", units: 0 },
+  { month: "October", units: 0 },
+  { month: "November", units: 0 },
+  { month: "December", units: 0 },
 ];
 
 const chartConfig = {
@@ -58,14 +58,13 @@ export function HighlightedBarChart() {
             variant="outline"
             className="text-green-500 bg-green-500/10 border-none ml-2"
           >
-            <TrendingUp className="h-4 w-4" />
-            <span>5.2%</span>
+            <TrendingUp className="h-2 w-2" />
           </Badge>
         </CardTitle>
         <CardDescription>
           {activeData
-            ? `${activeData.month}: ${activeData.desktop}`
-            : "January - December 2025"}
+            ? `${activeData.month}: ${activeData.units}`
+            : "January - December 2026"}
         </CardDescription>
       </CardHeader>
       <CardContent>

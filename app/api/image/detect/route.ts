@@ -49,7 +49,7 @@ export const POST = async (req: NextRequest) => {
     ];
 
     const result = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
+      model: "gemini-3.1-flash-lite",
       contents: contents,
       config: {
         responseModalities: ["Text"],

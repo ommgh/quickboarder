@@ -340,24 +340,6 @@ export default function CatalogPage() {
         </Card>
       ) : (
         <>
-          {filteredProducts.length > 0 && (
-            <div className="mb-4 flex items-center gap-2">
-              <Checkbox
-                id="select-all"
-                checked={
-                  filteredProducts.length > 0 &&
-                  filteredProducts.every((p) => selectedProducts.has(p.id))
-                }
-                onCheckedChange={handleSelectAll}
-              />
-              <label
-                htmlFor="select-all"
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Select all products
-              </label>
-            </div>
-          )}
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {filteredProducts.length > 0 ? (
               filteredProducts.map((product) => (
@@ -365,15 +347,6 @@ export default function CatalogPage() {
                   key={product.id}
                   className="overflow-hidden py-0 flex flex-col"
                 >
-                  <div className="absolute top-2 left-2 z-10">
-                    <Checkbox
-                      checked={selectedProducts.has(product.id)}
-                      onCheckedChange={(checked) =>
-                        handleSelectProduct(product.id, checked as boolean)
-                      }
-                      className="bg-white"
-                    />
-                  </div>
                   <div className="relative overflow-hidden h-[225px]">
                     <Image
                       src={product.ImageUrl || "/placeholder.svg"}
