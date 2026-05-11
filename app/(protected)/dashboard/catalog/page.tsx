@@ -8,7 +8,6 @@ import {
   Edit,
   Plus,
   Search,
-  Trash,
   Loader2,
   ChevronLeft,
   ChevronRight,
@@ -22,7 +21,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/components/ui/use-toast";
 import { ProductDeleteButton } from "@/components/product/ProductDelete";
 
@@ -254,7 +252,7 @@ export default function CatalogPage() {
     const dataUri =
       "data:application/json;charset=utf-8," + encodeURIComponent(dataStr);
 
-    const exportFileDefaultName = `quickboarder-catalog-${
+    const exportFileDefaultName = `Onboarder-catalog-${
       new Date().toISOString().split("T")[0]
     }.json`;
     const linkElement = document.createElement("a");

@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Flipkart Seller Integration feature enables QuickBoarder users to connect their Flipkart Seller Central accounts using OAuth 2.0 authentication. This Phase 1 MVP focuses exclusively on the connection flow - allowing users to authenticate, securely store credentials, and manage their connection status. The implementation mirrors the existing Amazon Seller Integration architecture and prepares the foundation for future product upload capabilities.
+The Flipkart Seller Integration feature enables Onboarder users to connect their Flipkart Seller Central accounts using OAuth 2.0 authentication. This Phase 1 MVP focuses exclusively on the connection flow - allowing users to authenticate, securely store credentials, and manage their connection status. The implementation mirrors the existing Amazon Seller Integration architecture and prepares the foundation for future product upload capabilities.
 
 ## Architecture
 
@@ -803,7 +803,7 @@ if (result.status?.connected) {
 Gets valid access token for user, automatically refreshing if needed.
 
 **Parameters:**
-- `userId` (string) - QuickBoarder user ID
+- `userId` (string) - Onboarder user ID
 
 **Returns:** `Promise<string>` - Decrypted access token
 
@@ -828,7 +828,7 @@ try {
 Stores encrypted tokens in database.
 
 **Parameters:**
-- `userId` (string) - QuickBoarder user ID
+- `userId` (string) - Onboarder user ID
 - `tokens` (object) - Token data
   - `accessToken` (string)
   - `refreshToken` (string)
@@ -845,7 +845,7 @@ Stores encrypted tokens in database.
 Revokes connection and deletes tokens.
 
 **Parameters:**
-- `userId` (string) - QuickBoarder user ID
+- `userId` (string) - Onboarder user ID
 
 **Returns:** `Promise<void>`
 
@@ -856,7 +856,7 @@ Revokes connection and deletes tokens.
 Gets connection status for user.
 
 **Parameters:**
-- `userId` (string) - QuickBoarder user ID
+- `userId` (string) - Onboarder user ID
 
 **Returns:**
 ```typescript
@@ -874,7 +874,7 @@ Promise<{
 Phase 2 will add product upload capabilities similar to the Amazon integration:
 
 1. **Product Mapper**
-   - Transform QuickBoarder products to Flipkart listing format
+   - Transform Onboarder products to Flipkart listing format
    - Category mapping with fallbacks
    - Image URL handling
    - SKU generation

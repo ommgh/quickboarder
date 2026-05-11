@@ -75,7 +75,7 @@ export const Pricing = ({ className }: { className?: string }) => {
             Pricing
           </h2>
           <p className="text-muted-foreground mx-auto max-w-xl leading-snug text-balance">
-            Use Quickboarder for free with all the features. Upgrade to enable
+            Use Onboarder for free with all the features. Upgrade to enable
             higher limits and premium features.
           </p>
         </div>

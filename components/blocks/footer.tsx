@@ -27,8 +27,8 @@ export function Footer() {
           Start your journey today
         </h2>
         <p className="text-muted-foreground mx-auto max-w-xl leading-snug text-balance">
-          Quickboarder is the perfect tool to take your business to the next
-          level within minutes
+          Onboarder is the perfect tool to take your business to the next level
+          within minutes
         </p>
         <div>
           <Button size="lg" className="mt-4" asChild>
@@ -107,7 +107,7 @@ export function Footer() {
             fontFamily="Poppins, sans-serif"
             letterSpacing="8"
           >
-            QUICKBOARDER
+            Onboarder
           </text>
         </svg>
       </div>

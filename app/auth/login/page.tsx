@@ -14,7 +14,7 @@ const SimpleFallback = () => (
           <div className="h-full w-full rounded-full bg-green-500/80"></div>
         </div>
       </div>
-      <h2 className="mb-2 text-2xl font-bold text-white">QuickBoarder</h2>
+      <h2 className="mb-2 text-2xl font-bold text-white">Onboarder</h2>
       <p className="text-accent-foreground">
         Get Your Buisness Online in Minutes
       </p>

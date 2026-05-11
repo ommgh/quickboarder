@@ -38,7 +38,7 @@ export const Hero = () => {
       <div className="container flex flex-col justify-between gap-8 md:gap-14 lg:flex-row lg:gap-20">
         <div className="flex-1">
           <h1 className="text-foreground max-w-160 text-3xl tracking-tight md:text-4xl lg:text-5xl xl:whitespace-nowrap">
-            Quickboarder
+            Onboarder
           </h1>
           <p className="text-muted-foreground text-1xl mt-5 md:text-3xl">
             Get your products e-commerce ready in minutes with AI-powered
@@ -46,9 +46,7 @@ export const Hero = () => {
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4 lg:flex-nowrap">
             <Button asChild>
-              <a href="https://quickboarder.shop/dashboard">
-                Get Started
-              </a>
+              <a href="https://Onboarder.shop/dashboard">Get Started</a>
             </Button>
             <Button
               variant="outline"

@@ -476,4 +476,4 @@ When adding new features or fixing bugs:
 
 ## License
 
-Internal use only - QuickBoarder platform.
+Internal use only - Onboarder platform.

@@ -1,6 +1,6 @@
-# QuickBoarder Dashboard
+# Onboarder Dashboard
 
-QuickBoarder is an AI-powered dashboard that allows users to upload product images and automatically generate structured product data, including images, titles, and descriptions. Depending on the product type, different AI models and web scrapers are utilized to retrieve and refine product details. Users can review, edit, and export their product catalogue for use on e-commerce platforms.
+Onboarder is an AI-powered dashboard that allows users to upload product images and automatically generate structured product data, including images, titles, and descriptions. Depending on the product type, different AI models and web scrapers are utilized to retrieve and refine product details. Users can review, edit, and export their product catalogue for use on e-commerce platforms.
 
 ## Features
 
@@ -22,8 +22,8 @@ QuickBoarder is an AI-powered dashboard that allows users to upload product imag
 
 1. Clone the repository:
    ```sh
-   git clone https://github.com/ommgh/quickboarder.git
-   cd QuickBoarder
+   git clone https://github.com/ommgh/Onboarder.git
+   cd Onboarder
    ```
 2. Install dependencies:
    ```sh

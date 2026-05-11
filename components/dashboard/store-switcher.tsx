@@ -38,7 +38,7 @@ export function StoreSwitcher() {
             </div>
 
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-medium">QUICKBOARDER</span>
+              <span className="truncate font-medium">ONBOARDER</span>
               <span className="truncate text-xs">FREE</span>
             </div>
           </SidebarMenuButton>

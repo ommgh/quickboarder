@@ -40,7 +40,7 @@ export const Features = () => {
             Made for small businesses
           </h2>
           <p className="text-muted-foreground leading-snug">
-            QuickBoarder is designed to help small businesses streamline their
+            Onboarder is designed to help small businesses streamline their
             onboarding process and get a new online store up and running in no
             time.
           </p>

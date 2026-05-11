@@ -23,11 +23,11 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: "Quickboarder - Get your products e-commerce ready",
-    template: "%s | Quickboarder",
+    default: "Onboarder - Get your products e-commerce ready",
+    template: "%s | Onboarder",
   },
   description:
-    "Quickboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
+    "Onboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
   keywords: [
     "e-commerce",
     "shopify",
@@ -43,9 +43,9 @@ export const metadata: Metadata = {
     "ai tools",
     "models",
   ],
-  authors: [{ name: "quickboarder.shop" }],
-  creator: "quickboarder.shop",
-  publisher: "quickboarder.shop",
+  authors: [{ name: "Onboarder.shop" }],
+  creator: "Onboarder.shop",
+  publisher: "Onboarder.shop",
   robots: {
     index: true,
     follow: true,
@@ -62,24 +62,24 @@ export const metadata: Metadata = {
     shortcut: [{ url: "/favicon/favicon.ico" }],
   },
   openGraph: {
-    title: "Quickboarder - Get your products e-commerce ready",
+    title: "Onboarder - Get your products e-commerce ready",
     description:
-      "Quickboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
-    siteName: "Quickboarder",
+      "Onboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
+    siteName: "Onboarder",
     images: [
       {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Quickboarder - Get your products e-commerce ready",
+        alt: "Onboarder - Get your products e-commerce ready",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Quickboarder - Get your products e-commerce ready",
+    title: "Onboarder - Get your products e-commerce ready",
     description:
-      "Quickboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
+      "Onboarder is a tool that helps you get your products e-commerce ready in minutes. Generate product descriptions, titles, and more with the power of AI.",
     images: ["/og-image.png"],
     creator: "@ommshx",
   },

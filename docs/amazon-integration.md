@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Amazon Seller Integration feature enables QuickBoarder users to connect their Amazon Seller Central accounts and upload products from their QuickBoarder catalogue to Amazon using the SP-API (Selling Partner API).
+The Amazon Seller Integration feature enables Onboarder users to connect their Amazon Seller Central accounts and upload products from their Onboarder catalogue to Amazon using the SP-API (Selling Partner API).
 
 ## Architecture
 
@@ -20,7 +20,7 @@ The Amazon Seller Integration feature enables QuickBoarder users to connect thei
    - Stores encrypted tokens in database
 
 3. **Product Mapper** (`lib/amazon/product-mapper.ts`)
-   - Transforms QuickBoarder products to Amazon listing format
+   - Transforms Onboarder products to Amazon listing format
    - Generates unique SKUs
    - Maps categories to Amazon product types
 
